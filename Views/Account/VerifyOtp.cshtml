@@ -1,0 +1,12 @@
+﻿@model VerifyOtpViewModel
+
+<h2>OTP Verification</h2>
+
+<form asp-action="VerifyOtp" method="post">
+    <div class="form-group">
+        <label for="otpInput">Enter OTP:</label>
+        <input type="text" class="form-control" id="otpInput" name="otpInput" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Verify OTP</button>
+</form>
+
