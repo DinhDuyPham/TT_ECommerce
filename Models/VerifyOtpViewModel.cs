@@ -2,6 +2,8 @@
 {
     public class VerifyOtpViewModel
     {
-        public string OtpInput { get; set; }
+        public string Email { get; set; }
+        public string Otp { get; set; }
     }
+
 }

@@ -11,8 +11,6 @@ namespace TT_ECommerce.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly OtpService _otpService; // Dịch vụ OTP
-        private static string _generatedOtp; // Lưu mã OTP tạm thời
-        private static string _otpUserEmail; // Lưu email người dùng
         public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, OtpService otpService)
         {
             _userManager = userManager;
@@ -20,7 +18,6 @@ namespace TT_ECommerce.Controllers
             _otpService = otpService;
         }
 
-         // GET: /Account/Login
         [HttpGet]
         public IActionResult Login()
         {
@@ -37,15 +34,17 @@ namespace TT_ECommerce.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    // Nếu đăng nhập email và mật khẩu thành công, tạo mã OTP và gửi email
-                    _generatedOtp = _otpService.GenerateOtp();
-                    _otpUserEmail = model.Email; // Lưu email để dùng sau khi xác thực OTP
+                    // Tạo và gửi OTP
+                    var otp = _otpService.GenerateOtp();
+                    await _otpService.SendOtpAsync(model.Email, otp);
 
-                    // Gửi mã OTP qua email
-                    await _otpService.SendOtpAsync(model.Email, _generatedOtp);
+                    // Lưu OTP vào session
+                    HttpContext.Session.SetString("OtpEmail", model.Email);
+                    HttpContext.Session.SetString("Otp", otp);
 
-                    // Điều hướng đến trang nhập OTP
-                    return RedirectToAction("VerifyOtp");
+                    Console.WriteLine($"User {model.Email} signed in successfully. OTP generated and sent: {otp}");
+
+                    return RedirectToAction("VerifyOtp", new { email = model.Email });
                 }
                 if (result.IsLockedOut)
                 {
@@ -53,36 +52,59 @@ namespace TT_ECommerce.Controllers
                 }
                 else
                 {
+                    Console.WriteLine($"Invalid login attempt for user {model.Email}.");
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return View(model);
                 }
             }
+
+            Console.WriteLine("Model state is invalid.");
             return View(model);
         }
 
-        // GET: /Account/VerifyOtp
         [HttpGet]
-        public IActionResult VerifyOtp()
+        public IActionResult VerifyOtp(string email)
         {
-            return View();
+            // Hiển thị trang xác thực OTP
+            return View(new VerifyOtpViewModel { Email = email });
         }
 
-        // POST: /Account/VerifyOtp
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> VerifyOtp(string otpInput)
+        public IActionResult VerifyOtp(VerifyOtpViewModel model)
         {
-            if (otpInput == _generatedOtp) // Kiểm tra mã OTP người dùng nhập
+            if (ModelState.IsValid)
             {
-                // OTP chính xác, người dùng đã được xác thực
-                await _signInManager.SignInAsync(await _userManager.FindByEmailAsync(_otpUserEmail), isPersistent: false);
-                return RedirectToAction("Index", "Home");
+                // Lấy OTP và email từ session
+                var storedOtp = HttpContext.Session.GetString("Otp");
+                var email = HttpContext.Session.GetString("OtpEmail");
+
+                Console.WriteLine($"Verifying OTP for email: {email}. OTP entered: {model.Otp}");
+                Console.WriteLine($"Stored OTP for email: {email} is {storedOtp}");
+
+                if (storedOtp != null && email != null && storedOtp == model.Otp)
+                {
+                    Console.WriteLine($"OTP verification succeeded for email: {email}.");
+
+                    // Xóa OTP khỏi session sau khi xác thực thành công
+                    HttpContext.Session.Remove("Otp");
+                    HttpContext.Session.Remove("OtpEmail");
+
+                    // OTP hợp lệ, tiếp tục đăng nhập
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid OTP provided for email: {email}.");
+                    ModelState.AddModelError(string.Empty, "Invalid OTP.");
+                }
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Invalid OTP.");
-                return View();
+                Console.WriteLine("Model state is invalid during OTP verification.");
             }
+
+            return View(model);
         }
 
 

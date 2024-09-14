@@ -13,7 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Cấu hình chuỗi kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<TT_ECommerceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Thêm dịch vụ OtpService
 builder.Services.AddTransient<OtpService>();
+
 // Cấu hình Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -34,8 +37,17 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddEntityFrameworkStores<TT_ECommerceDbContext>()
     .AddDefaultTokenProviders();
 
-// Thêm các dịch vụ MVC
+// Thêm dịch vụ MVC
 builder.Services.AddControllersWithViews();
+
+// Thêm dịch vụ Session
+builder.Services.AddDistributedMemoryCache(); // Cung cấp bộ nhớ cache phân phối
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Thay đổi thời gian hết hạn của session nếu cần
+    options.Cookie.HttpOnly = true; // Cookie chỉ có thể được truy cập qua HTTP
+    options.Cookie.IsEssential = true; // Cookie là cần thiết cho ứng dụng
+});
 
 var app = builder.Build();
 
@@ -55,6 +67,9 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Kích hoạt middleware Session
+app.UseSession();
 
 app.UseEndpoints(endpoints =>
 {
