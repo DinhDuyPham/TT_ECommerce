@@ -46,7 +46,7 @@ namespace TT_ECommerce.Models.EF
 
         public ICollection<AspNetUserClaims> UserClaims { get; set; } = new HashSet<AspNetUserClaims>();
 
-        public ICollection<AspNetUserLogins> UserLogins { get; set; } = new HashSet<AspNetUserLogins>();
+        public ICollection<AspNetUserLogin> UserLogins { get; set; } = new HashSet<AspNetUserLogin>();
 
         public ICollection<AspNetUserRoles> UserRoles { get; set; } = new HashSet<AspNetUserRoles>();
     }

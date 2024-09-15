@@ -20,6 +20,6 @@ namespace TT_ECommerce.Models.EF
 
         // Mối quan hệ với AspNetUser
         [ForeignKey(nameof(UserId))]
-        public AspNetUser User { get; set; } = null!;
+        public AspNetUsers User { get; set; } = null!;
     }
 }
