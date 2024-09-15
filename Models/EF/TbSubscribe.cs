@@ -1,20 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbSubscribe
 {
-    [Table("tb_Subscribe")]
-    public class TbSubscribe
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(int.MaxValue)]
-        public string Email { get; set; } = null!;
+    public string Email { get; set; } = null!;
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
-    }
+    public DateTime CreatedDate { get; set; }
 }

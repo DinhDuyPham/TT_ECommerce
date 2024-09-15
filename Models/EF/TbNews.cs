@@ -1,58 +1,39 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbNews
 {
-    [Table("tb_News")]
-    public class TbNews
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(150)]
-        public string Title { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        [StringLength(int.MaxValue)]
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Detail { get; set; }
+    public string? Detail { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Image { get; set; }
+    public string? Image { get; set; }
 
-        [Required]
-        public int CategoryId { get; set; }
+    public int CategoryId { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? SeoTitle { get; set; }
+    public string? SeoTitle { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? SeoDescription { get; set; }
+    public string? SeoDescription { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? SeoKeywords { get; set; }
+    public string? SeoKeywords { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime ModifiedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Modifiedby { get; set; }
+    public string? Modifiedby { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Alias { get; set; }
+    public string? Alias { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; }
-        [ForeignKey("CategoryId")]
-        public TbCategory Category { get; set; } = null!;
-    }
+    public bool IsActive { get; set; }
+
+    public virtual TbCategory Category { get; set; } = null!;
 }

@@ -6,12 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TT_ECommerce.Data;
+using TT_ECommerce.Models.EF;
 using TT_ECommerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Cấu hình chuỗi kết nối đến cơ sở dữ liệu
-builder.Services.AddDbContext<TT_ECommerceDbContext>(options =>
+builder.Services.AddDbContext<TtEcommerceContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddTransient<EmailService>();
 // Thêm dịch vụ OtpService
@@ -34,7 +35,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.User.RequireUniqueEmail = true;
     options.SignIn.RequireConfirmedAccount = false;
 })
-    .AddEntityFrameworkStores<TT_ECommerceDbContext>()
+    .AddEntityFrameworkStores<TtEcommerceContext>()
     .AddDefaultTokenProviders();
 
 // Thêm dịch vụ MVC

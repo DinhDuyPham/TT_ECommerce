@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TT_ECommerce.Models.EF;
 
-public partial class TbProductCategory
+public partial class TbPost
 {
     public int Id { get; set; }
 
@@ -11,7 +11,11 @@ public partial class TbProductCategory
 
     public string? Description { get; set; }
 
-    public string? Icon { get; set; }
+    public string? Detail { get; set; }
+
+    public string? Image { get; set; }
+
+    public int CategoryId { get; set; }
 
     public string? SeoTitle { get; set; }
 
@@ -27,7 +31,9 @@ public partial class TbProductCategory
 
     public string? Modifiedby { get; set; }
 
-    public string Alias { get; set; } = null!;
+    public string? Alias { get; set; }
 
-    public virtual ICollection<TbProduct> TbProducts { get; set; } = new List<TbProduct>();
+    public bool IsActive { get; set; }
+
+    public virtual TbCategory Category { get; set; } = null!;
 }

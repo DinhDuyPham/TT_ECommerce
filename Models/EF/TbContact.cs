@@ -1,41 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbContact
 {
-    [Table("tb_Contact")]
-    public class TbContact
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(150)]
-        public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-        [StringLength(150)]
-        public string? Email { get; set; }
+    public string? Email { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Website { get; set; }
+    public string? Website { get; set; }
 
-        [StringLength(4000)]
-        public string? Message { get; set; }
+    public string? Message { get; set; }
 
-        [Required]
-        public bool IsRead { get; set; }
+    public bool IsRead { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime ModifiedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Modifiedby { get; set; }
-    }
+    public string? Modifiedby { get; set; }
 }

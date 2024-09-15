@@ -3,19 +3,15 @@ using System.Collections.Generic;
 
 namespace TT_ECommerce.Models.EF;
 
-public partial class TbOrderDetail
+public partial class TbProductImage
 {
     public int Id { get; set; }
 
-    public int OrderId { get; set; }
-
     public int ProductId { get; set; }
 
-    public decimal Price { get; set; }
+    public string? Image { get; set; }
 
-    public int Quantity { get; set; }
-
-    public virtual TbOrder Order { get; set; } = null!;
+    public bool IsDefault { get; set; }
 
     public virtual TbProduct Product { get; set; } = null!;
 }

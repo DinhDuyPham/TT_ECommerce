@@ -1,92 +1,63 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbProduct
 {
-    [Table("tb_Product")]
-    public class TbProduct
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(250)]
-        public string Title { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        [StringLength(50)]
-        public string? ProductCode { get; set; }
+    public string? ProductCode { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Detail { get; set; }
+    public string? Detail { get; set; }
 
-        [StringLength(250)]
-        public string? Image { get; set; }
+    public string? Image { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal Price { get; set; }
+    public decimal Price { get; set; }
 
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? PriceSale { get; set; }
+    public decimal? PriceSale { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
+    public int Quantity { get; set; }
 
-        [Required]
-        public bool IsHome { get; set; }
+    public bool IsHome { get; set; }
 
-        [Required]
-        public bool IsSale { get; set; }
+    public bool IsSale { get; set; }
 
-        [Required]
-        public bool IsFeature { get; set; }
+    public bool IsFeature { get; set; }
 
-        [Required]
-        public bool IsHot { get; set; }
+    public bool IsHot { get; set; }
 
-        [Required]
-        public int ProductCategoryId { get; set; }
+    public int ProductCategoryId { get; set; }
 
-        [StringLength(250)]
-        public string? SeoTitle { get; set; }
+    public string? SeoTitle { get; set; }
 
-        [StringLength(500)]
-        public string? SeoDescription { get; set; }
+    public string? SeoDescription { get; set; }
 
-        [StringLength(250)]
-        public string? SeoKeywords { get; set; }
+    public string? SeoKeywords { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime ModifiedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Modifiedby { get; set; }
+    public string? Modifiedby { get; set; }
 
-        [StringLength(250)]
-        public string? Alias { get; set; }
+    public string? Alias { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; }
+    public bool IsActive { get; set; }
 
-        [Required]
-        public int ViewCount { get; set; }
+    public int ViewCount { get; set; }
 
-        [Required]
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal OriginalPrice { get; set; }
+    public decimal OriginalPrice { get; set; }
 
-        // Navigation property
-        [ForeignKey("ProductCategoryId")]
-        public TbCategory ProductCategory { get; set; } = null!;
-    }
+    public virtual TbProductCategory ProductCategory { get; set; } = null!;
+
+    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; } = new List<TbOrderDetail>();
+
+    public virtual ICollection<TbProductImage> TbProductImages { get; set; } = new List<TbProductImage>();
 }

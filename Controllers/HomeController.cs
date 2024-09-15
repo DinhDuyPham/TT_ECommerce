@@ -1,7 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
-
+using Microsoft.EntityFrameworkCore;
 namespace TT_ECommerce.Controllers;
 
 public class HomeController : Controller
@@ -28,4 +28,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }

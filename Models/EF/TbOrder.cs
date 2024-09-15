@@ -1,50 +1,37 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbOrder
 {
-    [Table("tb_Order")]
-    public class TbOrder
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        public string Code { get; set; } = null!;
+    public string Code { get; set; } = null!;
 
-        [Required]
-        public string CustomerName { get; set; } = null!;
+    public string CustomerName { get; set; } = null!;
 
-        [Required]
-        public string Phone { get; set; } = null!;
+    public string Phone { get; set; } = null!;
 
-        [Required]
-        public string Address { get; set; } = null!;
+    public string Address { get; set; } = null!;
 
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal TotalAmount { get; set; }
+    public decimal TotalAmount { get; set; }
 
-        [Required]
-        public int Quantity { get; set; }
+    public int Quantity { get; set; }
 
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime ModifiedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
-        public string? Modifiedby { get; set; }
+    public string? Modifiedby { get; set; }
 
-        [Required]
-        public int TypePayment { get; set; }
+    public int TypePayment { get; set; }
 
-        public string? Email { get; set; }
+    public string? Email { get; set; }
 
-        public int? Status { get; set; }
-        public ICollection<TbOrderDetail> OrderDetails { get; set; } = new HashSet<TbOrderDetail>();
-    }
+    public int? Status { get; set; }
+
+    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; } = new List<TbOrderDetail>();
 }

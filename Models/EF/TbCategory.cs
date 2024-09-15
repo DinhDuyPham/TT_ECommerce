@@ -1,53 +1,39 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbCategory
 {
-    [Table("tb_Category")]
-    public class TbCategory
-    {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(150)]
-        public string Title { get; set; } = null!;
+    public string Title { get; set; } = null!;
 
-        [StringLength(int.MaxValue)]
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        [StringLength(150)]
-        public string? SeoTitle { get; set; }
+    public string? SeoTitle { get; set; }
 
-        [StringLength(250)]
-        public string? SeoDescription { get; set; }
+    public string? SeoDescription { get; set; }
 
-        [StringLength(150)]
-        public string? SeoKeywords { get; set; }
+    public string? SeoKeywords { get; set; }
 
-        [Required]
-        public int Position { get; set; }
+    public int Position { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? CreatedBy { get; set; }
+    public string? CreatedBy { get; set; }
 
-        [Required]
-        public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime ModifiedDate { get; set; }
+    public DateTime ModifiedDate { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Modifiedby { get; set; }
+    public string? Modifiedby { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Alias { get; set; }
+    public string? Alias { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; }
+    public bool IsActive { get; set; }
 
-        [StringLength(int.MaxValue)]
-        public string? Link { get; set; }
-    }
+    public string? Link { get; set; }
+
+    public virtual ICollection<TbNews> TbNews { get; set; } = new List<TbNews>();
+
+    public virtual ICollection<TbPost> TbPosts { get; set; } = new List<TbPost>();
 }

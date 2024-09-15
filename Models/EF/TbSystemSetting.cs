@@ -1,19 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
 
-namespace TT_ECommerce.Models.EF
+namespace TT_ECommerce.Models.EF;
+
+public partial class TbSystemSetting
 {
-    [Table("tb_SystemSetting")]
-    public class TbSystemSetting
-    {
-        [Key]
-        [StringLength(50)]
-        public string SettingKey { get; set; } = null!;
+    public string SettingKey { get; set; } = null!;
 
-        [StringLength(4000)]
-        public string? SettingValue { get; set; }
+    public string? SettingValue { get; set; }
 
-        [StringLength(4000)]
-        public string? SettingDescription { get; set; }
-    }
+    public string? SettingDescription { get; set; }
 }
