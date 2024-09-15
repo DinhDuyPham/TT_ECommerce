@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Cấu hình chuỗi kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<TT_ECommerceDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddTransient<EmailService>();
 // Thêm dịch vụ OtpService
 builder.Services.AddTransient<OtpService>();
 

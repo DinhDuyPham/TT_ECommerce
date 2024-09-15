@@ -10,12 +10,15 @@ namespace TT_ECommerce.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly OtpService _otpService; // Dịch vụ OTP
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, OtpService otpService)
+        private readonly OtpService _otpService;
+        private readonly EmailService _emailService;
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, OtpService otpService, EmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _otpService = otpService;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -36,13 +39,13 @@ namespace TT_ECommerce.Controllers
                 {
                     // Tạo và gửi OTP
                     var otp = _otpService.GenerateOtp();
-                    await _otpService.SendOtpAsync(model.Email, otp);
+                    await _emailService.SendEmailAsync(model.Email, "OTP Verification", $"Your OTP is: {otp}");
 
                     // Lưu OTP vào session
                     HttpContext.Session.SetString("OtpEmail", model.Email);
                     HttpContext.Session.SetString("Otp", otp);
 
-                    Console.WriteLine($"User {model.Email} signed in successfully. OTP generated and sent: {otp}");
+                    Console.WriteLine($"User {model.Email} signed in successfully. OTP generated and sent");
 
                     return RedirectToAction("VerifyOtp", new { email = model.Email });
                 }
@@ -78,9 +81,6 @@ namespace TT_ECommerce.Controllers
                 // Lấy OTP và email từ session
                 var storedOtp = HttpContext.Session.GetString("Otp");
                 var email = HttpContext.Session.GetString("OtpEmail");
-
-                Console.WriteLine($"Verifying OTP for email: {email}. OTP entered: {model.Otp}");
-                Console.WriteLine($"Stored OTP for email: {email} is {storedOtp}");
 
                 if (storedOtp != null && email != null && storedOtp == model.Otp)
                 {
@@ -150,12 +150,6 @@ namespace TT_ECommerce.Controllers
             return View(model);
         }
 
-        // GET: /Account/Manage
-        [HttpGet]
-        public IActionResult Manage()
-        {
-            // Đưa thông tin người dùng đến view
-            return View();
-        }
+    
     }
 }
