@@ -7,7 +7,7 @@ namespace TT_ECommerce.Services
     public class EmailService
     {
         private readonly string _fromEmail = "example@gmail.com";
-        private readonly string _fromName = "YourApp";
+        private readonly string _fromName = "TT_ECommerce";
         private readonly string _fromPassword = "examplePawword";
         private readonly string _smtpHost = "smtp.gmail.com";
         private readonly int _smtpPort = 587;

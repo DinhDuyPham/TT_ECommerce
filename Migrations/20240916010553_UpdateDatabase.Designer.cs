@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TT_ECommerce.Data;
 
@@ -11,9 +12,11 @@ using TT_ECommerce.Data;
 namespace TT_ECommerce.Migrations
 {
     [DbContext(typeof(TT_ECommerceDbContext))]
-    partial class TT_ECommerceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240916010553_UpdateDatabase")]
+    partial class UpdateDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

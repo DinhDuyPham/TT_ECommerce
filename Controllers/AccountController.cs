@@ -38,12 +38,10 @@ namespace TT_ECommerce.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    // Tạo và gửi OTP
                     var otp = _otpService.GenerateOtp();
                     try
                     {
                         await _emailService.SendEmailAsync(model.Email, "OTP Verification", $"Your OTP is: {otp}");
-                        // Lưu OTP vào session
                         HttpContext.Session.SetString("OtpEmail", model.Email);
                         HttpContext.Session.SetString("Otp", otp);
 
@@ -52,7 +50,6 @@ namespace TT_ECommerce.Controllers
                     }
                     catch (Exception ex)
                     {
-                        // Log lỗi gửi email
                         Console.WriteLine($"Error sending OTP email: {ex.Message}");
                         ModelState.AddModelError(string.Empty, "Error sending OTP email. Please try again later.");
                         return View(model);
@@ -73,6 +70,7 @@ namespace TT_ECommerce.Controllers
             Console.WriteLine("Model state is invalid.");
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult VerifyOtp(string email)
@@ -313,6 +311,47 @@ namespace TT_ECommerce.Controllers
         {
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            // Get the logged-in user's email
+            var email = User.Identity?.Name;
+            if (email == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Find the user by email
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Prepare the user profile view model
+            var model = new UserProfileViewModel
+            {
+                Email = user.Email,
+                UserName = user.UserName,
+                // Add other properties as needed
+            };
+
+            return View(model);
+        }
+        // GET: /Account/Logout
+        // POST: /Account/Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            // Đăng xuất người dùng
+            await _signInManager.SignOutAsync();
+
+            // Chuyển hướng đến trang chính sau khi đăng xuất
+            return RedirectToAction("Index", "Home");
+        }
+
+
 
     }
 }
