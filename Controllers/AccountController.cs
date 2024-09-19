@@ -4,6 +4,7 @@ using TT_ECommerce.Models;
 using System.Threading.Tasks;
 using TT_ECommerce.Services;
 using static System.Net.WebRequestMethods;
+using System.ComponentModel.DataAnnotations;
 
 namespace TT_ECommerce.Controllers
 {
@@ -35,41 +36,74 @@ namespace TT_ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
-                if (result.Succeeded)
-                {
-                    var otp = _otpService.GenerateOtp();
-                    try
-                    {
-                        await _emailService.SendEmailAsync(model.Email, "OTP Verification", $"Your OTP is: {otp}");
-                        HttpContext.Session.SetString("OtpEmail", model.Email);
-                        HttpContext.Session.SetString("Otp", otp);
+                IdentityUser user;
+                string userEmail = string.Empty;  // Khởi tạo biến để lưu email người dùng
 
-                        Console.WriteLine($"User {model.Email} signed in successfully. OTP generated and sent");
-                        return RedirectToAction("VerifyOtp", new { email = model.Email });
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error sending OTP email: {ex.Message}");
-                        ModelState.AddModelError(string.Empty, "Error sending OTP email. Please try again later.");
-                        return View(model);
-                    }
-                }
-                if (result.IsLockedOut)
+                // Kiểm tra xem chuỗi nhập vào có phải email hợp lệ không
+                if (new EmailAddressAttribute().IsValid(model.UsernameOrEmail))
                 {
-                    return RedirectToAction("Lockout");
+                    // Nếu là email, tìm người dùng theo email
+                    user = await _userManager.FindByEmailAsync(model.UsernameOrEmail);
+                    userEmail = model.UsernameOrEmail;  // Lưu email từ input
                 }
                 else
                 {
-                    Console.WriteLine($"Invalid login attempt for user {model.Email}.");
+                    // Nếu không, tìm người dùng theo username
+                    user = await _userManager.FindByNameAsync(model.UsernameOrEmail);
+
+                    // Nếu tìm thấy user, lấy email từ tài khoản của họ
+                    if (user != null)
+                    {
+                        userEmail = user.Email;  // Lưu email từ tài khoản người dùng
+                    }
+                }
+
+                if (user != null)
+                {
+                    var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, lockoutOnFailure: true);
+
+                    if (result.Succeeded)
+                    {
+                        var otp = _otpService.GenerateOtp();
+                        try
+                        {
+                            // Gửi OTP đến email đã xác định trước
+                            await _emailService.SendEmailAsync(userEmail, "OTP Verification", $"Your OTP is: {otp}");
+
+                            HttpContext.Session.SetString("OtpEmail", userEmail);  // Lưu email người dùng vào session
+                            HttpContext.Session.SetString("Otp", otp);
+
+                            Console.WriteLine($"User {userEmail} signed in successfully. OTP generated and sent");
+                            return RedirectToAction("VerifyOtp", new { email = userEmail });
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error sending OTP email: {ex.Message}");
+                            ModelState.AddModelError(string.Empty, "Error sending OTP email. Please try again later.");
+                            return View(model);
+                        }
+                    }
+
+                    if (result.IsLockedOut)
+                    {
+                        return RedirectToAction("Lockout");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Invalid login attempt for user {user.UserName}.");
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View(model);
+                    }
+                }
+                else
+                {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                    return View(model);
                 }
             }
 
-            Console.WriteLine("Model state is invalid.");
             return View(model);
         }
+
 
 
         [HttpGet]
@@ -133,7 +167,8 @@ namespace TT_ECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+                // Sử dụng UserName là model.UserName và Email là model.Email
+                var user = new IdentityUser { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
@@ -178,6 +213,7 @@ namespace TT_ECommerce.Controllers
             // Nếu model không hợp lệ, trả về trang đăng ký với các lỗi
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -314,30 +350,44 @@ namespace TT_ECommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> Profile()
         {
-            // Get the logged-in user's email
-            var email = User.Identity?.Name;
-            if (email == null)
+            // Get the logged-in user's username or email from the Identity
+            var usernameOrEmail = User.Identity?.Name;
+            if (usernameOrEmail == null)
             {
                 return RedirectToAction("Login");
             }
 
-            // Find the user by email
-            var user = await _userManager.FindByEmailAsync(email);
+            IdentityUser user;
+
+            // Kiểm tra xem usernameOrEmail có phải là email hợp lệ không
+            if (new EmailAddressAttribute().IsValid(usernameOrEmail))
+            {
+                // Nếu là email, tìm người dùng theo email
+                user = await _userManager.FindByEmailAsync(usernameOrEmail);
+            }
+            else
+            {
+                // Nếu là username, tìm người dùng theo username
+                user = await _userManager.FindByNameAsync(usernameOrEmail);
+            }
+
             if (user == null)
             {
+                // Nếu không tìm thấy người dùng, chuyển hướng về trang đăng nhập
                 return RedirectToAction("Login");
             }
 
-            // Prepare the user profile view model
+            // Chuẩn bị dữ liệu cho ViewModel UserProfile
             var model = new UserProfileViewModel
             {
                 Email = user.Email,
                 UserName = user.UserName,
-                // Add other properties as needed
+                // Add other properties as needed (e.g., FirstName, LastName, etc.)
             };
 
             return View(model);
         }
+
         // GET: /Account/Logout
         // POST: /Account/Logout
         [HttpPost]

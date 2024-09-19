@@ -5,8 +5,7 @@ namespace TT_ECommerce.Models
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string UsernameOrEmail { get; set; } // Cho phép nhập vào username hoặc email
 
         [Required]
         [DataType(DataType.Password)]
