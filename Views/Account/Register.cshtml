@@ -29,22 +29,26 @@
                 <div class="signup-content">
                     <div class="signup-form">
                         <h2 class="form-title">Sign Up</h2>
-                        <form method="POST" class="register-form" id="register-form">
+                        <form asp-action="Register" method="POST" class="register-form" id="register-form">
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" name="name" id="name" placeholder="Your Name" />
+                                <input <input asp-for="UserName"  placeholder="Your Name" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Your Email" />
+                                <input <input asp-for="Email"  placeholder="Your Email" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="pass" id="pass" placeholder="Password" />
+                                <input <input asp-for="Password"  placeholder="Password" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <label for="re-pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password" />
+                                <input <input asp-for="ConfirmPassword"   placeholder="Repeat your password" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
