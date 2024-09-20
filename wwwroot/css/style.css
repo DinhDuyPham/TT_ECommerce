@@ -550,9 +550,22 @@ hero .hero-img-wrap {
 .testimonial-slider-wrap {
   position: relative;
 }
+.testimonial-slider-wrap #testimonial-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 99;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.testimonial-slider-wrap #testimonial-nav span {
+  cursor: pointer;
+}
 .testimonial-slider-wrap .tns-inner {
   padding-top: 30px;
 }
+
 .testimonial-slider-wrap .item .testimonial-block blockquote {
   font-size: 16px;
 }
