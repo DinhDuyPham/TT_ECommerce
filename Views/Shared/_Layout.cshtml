@@ -21,7 +21,9 @@
     <link href="~/TT_ECommerce.styles.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/css/tiny-slider.css" rel="stylesheet" />
     <link href="~/css/style.css" rel="stylesheet" />
-
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
     <!-- Favicon -->
     <link rel="shortcut icon" href="favicon.png" />
 
@@ -530,7 +532,10 @@
             </div>
     </div>
     <!-- End Popular Product -->
+
     <!-- Start Testimonial Slider -->
+
+
     <div class="testimonial-section">
         <div class="container">
             <div class="row">
@@ -722,7 +727,18 @@
             &copy; 2024 - TT_ECommerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-
+    <script>
+        var slider = tns({
+            container: '.testimonial-slider',
+            items: 1,
+            slideBy: 'page',
+            autoplay: true,
+            controlsContainer: "#testimonial-nav",
+            nav: true,
+            navPosition: "bottom",
+            autoplayButtonOutput: false
+        });
+    </script>
     <!-- Scripts -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
