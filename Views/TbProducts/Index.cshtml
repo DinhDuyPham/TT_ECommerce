@@ -1,0 +1,132 @@
+﻿@model IEnumerable<TT_ECommerce.Models.EF.TbProduct>
+
+@{
+    Layout = "~/Views/Shared/_CategoryLayout.cshtml"; 
+    ViewData["Title"] = "Danh Mục Sản Phẩm";
+}
+
+<div class="untree_co-section product-section before-footer-section">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12 col-md-4 col-lg-3 mb-5">
+                <div class="categories">
+                    <h3 class="category-title">Categories</h3>
+
+                    <form id="filterForm" method="get">
+                        <ul class="category-list">
+                            <li>
+                                <label>
+                                    <input type="checkbox" name="categoryId" value="" class="category-filter" @(ViewContext.HttpContext.Request.Query["categoryId"] == "" ? "checked" : "")> All
+                                </label>
+                            </li>
+                            @foreach (var category in ViewBag.Categories)
+                            {
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="categoryId" value="@category.Id" class="category-filter" @(ViewContext.HttpContext.Request.Query["categoryId"] == category.Id.ToString() ? "checked" : "")> @category.Title
+                                    </label>
+                                </li>
+                            }
+                        </ul>
+
+                        <!-- Lọc theo giá -->
+                        <h4 class="filter-title">Filter by price</h4>
+                        <div class="filter-price-slider">
+                            $<span id="min-price">0</span>
+                            @{
+                                var maxPrice = ViewContext.HttpContext.Request.Query["maxPrice"].ToString();
+                                if (string.IsNullOrEmpty(maxPrice))
+                                {
+                                    maxPrice = "1500";
+                                }
+                            }
+                            <input type="range" id="priceRange"
+                                   min="0"
+                                   max="1500"
+                                   value="@maxPrice"
+                                   step="100"
+                                   name="maxPrice"
+                                   class="price-filter"
+                                   oninput="updatePriceRange()" />
+                            $<span id="display-max-price">@maxPrice</span>
+                        </div>
+
+
+                        <!-- Sắp xếp theo giá -->
+                        <div class="sort-price">
+                            <h4 class="filter-title" for="sortOrder">Sort by price:</h4>
+                            <select name="sortOrder" id="sortOrder" class="form-control">
+                                <option value="">Default</option>
+                                @if (ViewBag.SortOrder == "price_asc")
+                                {
+                                    <option value="price_asc" selected="selected">Prices gradually increase</option>
+                                }
+                                else
+                                {
+                                    <option value="price_asc">Prices gradually increase</option>
+                                }
+
+                                @if (ViewBag.SortOrder == "price_desc")
+                                {
+                                    <option value="price_desc" selected="selected">Prices gradually decrease</option>
+                                }
+                                else
+                                {
+                                    <option value="price_desc">Prices gradually decrease</option>
+                                }
+                            </select>
+                        </div>
+
+                        <button class="btn btn-secondary me-2" type="submit" style="margin-top: 10px">Filter</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Product Items Section -->
+            <div class="col-12 col-md-8 col-lg-9">
+                <div class="row" id="product-list">
+                    @foreach (var product in Model)
+                    {
+                        <div class="col-12 col-md-6 col-lg-4 mb-5">
+                            <div class="product-item">
+                                <img src="@Url.Content(product.Image)" class="img-fluid product-thumbnail" alt="Product Image" />
+                                <a href="@Url.Action("ProductDetails", new { id = product.Id })" style="text-decoration: none;">
+                                    <h3 class="product-title">@product.Title</h3>
+                                </a>
+                                <strong class="product-price">@product.Price.ToString("C")</strong>
+                                <span class="original-price">@product.OriginalPrice.ToString("C")</span>
+                                <span class="icon-cross">
+                                    <img src="~/images/cross.svg" class="img-fluid" />
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Phân trang -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        @for (var i = 1; i <= (ViewBag.TotalItems + ViewBag.PageSize - 1) / ViewBag.PageSize; i++)
+                        {
+                            <li class="page-item @(ViewBag.Page == i ? "active" : "")">
+                                <a class="page-link" href="?page=@i&sortOrder=@ViewBag.SortOrder&categoryId=@ViewContext.HttpContext.Request.Query["categoryId"]&maxPrice=@ViewContext.HttpContext.Request.Query["maxPrice"]">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updatePriceRange() {
+        var priceRange = document.getElementById("priceRange");
+        var displayMaxPrice = document.getElementById("display-max-price");
+
+        // Cập nhật giá trị hiển thị của thanh trượt
+        displayMaxPrice.textContent = priceRange.value;
+    }
+</script>
+

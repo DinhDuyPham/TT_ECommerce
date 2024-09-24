@@ -40,6 +40,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 
 // Thêm dịch vụ MVC
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
 
 // Thêm dịch vụ Session
 builder.Services.AddDistributedMemoryCache(); // Cung cấp bộ nhớ cache phân phối
@@ -74,6 +75,11 @@ app.UseSession();
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapControllerRoute(
+       name: "shop",
+       pattern: "Shop",
+       defaults: new { controller = "TbProducts", action = "Index" });
+
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
