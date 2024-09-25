@@ -23,19 +23,20 @@
                         <ul class="category-list">
                             <li>
                                 <label>
-                                    <input type="checkbox" name="categoryId" value="" class="category-filter" @(Array.IndexOf(selectedCategoryIds, "") >= 0 ? "checked" : "")> All
+                                    <input type="checkbox" name="categoryId" value="" class="category-filter"
+                                    @(selectedCategoryIds.Length == 0 ? "checked" : "")> All
                                 </label>
                             </li>
                             @foreach (var category in ViewBag.Categories)
                             {
                                 <li>
                                     <label>
-                                        <input type="checkbox" name="categoryId" value="@category.Id" class="category-filter" @(Array.IndexOf(selectedCategoryIds, category.Id.ToString()) >= 0 ? "checked" : "")> @category.Title
+                                        <input type="checkbox" name="categoryId" value="@category.Id" class="category-filter"
+                                        @(Array.IndexOf(selectedCategoryIds, category.Id.ToString()) >= 0 ? "checked" : "")> @category.Title
                                     </label>
                                 </li>
                             }
                         </ul>
-
 
                         <!-- Lọc theo giá -->
                         <h4 class="filter-title">Filter by price</h4>
@@ -58,7 +59,6 @@
                                    oninput="updatePriceRange()" />
                             $<span id="display-max-price">@maxPrice</span>
                         </div>
-
 
                         <!-- Sắp xếp theo giá -->
                         <div class="sort-price">
@@ -135,6 +135,7 @@
         // Cập nhật giá trị hiển thị của thanh trượt
         displayMaxPrice.textContent = priceRange.value;
     }
+
     document.getElementById('filterForm').addEventListener('submit', function (event) {
         event.preventDefault(); // Ngăn chặn việc gửi form mặc định
         var form = this;
@@ -143,14 +144,16 @@
         var categoryIds = [];
         var checkboxes = document.querySelectorAll('input[name="categoryId"]:checked');
         checkboxes.forEach(function (checkbox) {
-            if (checkbox.value) { // Bỏ qua trường hợp checkbox có giá trị rỗng (All)
+            if (checkbox.value) { // Bỏ qua checkbox có giá trị rỗng (All)
                 categoryIds.push(checkbox.value);
             }
         });
 
         // Tạo URL với các tham số mong muốn
         var url = new URL(window.location.href);
-        url.searchParams.set('categoryId', categoryIds.join(',')); // Gộp categoryId thành chuỗi cách nhau bằng dấu phẩy
+
+        // Gộp categoryId thành chuỗi cách nhau bằng dấu phẩy
+        url.searchParams.set('categoryId', categoryIds.join(','));
 
         // Cập nhật các tham số khác (maxPrice và sortOrder)
         var maxPrice = form.querySelector('input[name="maxPrice"]').value;
@@ -159,8 +162,12 @@
         var sortOrder = form.querySelector('select[name="sortOrder"]').value;
         url.searchParams.set('sortOrder', sortOrder);
 
+        // Xóa tham số 'page' nếu có (để luôn chuyển về trang 1 khi lọc)
+        url.searchParams.delete('page');
+
         // Chuyển hướng tới URL mới
         window.location.href = url.toString();
     });
 </script>
+
 

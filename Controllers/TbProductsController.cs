@@ -21,7 +21,7 @@ namespace TT_ECommerce.Controllers
         }
 
         // GET: TbProducts
-        public async Task<IActionResult> Index(string? categoryId, string? search, decimal? minPrice, decimal? maxPrice, string? sortOrder, int page = 1, int pageSize = 3)
+        public async Task<IActionResult> Index(string? categoryId, string? search, decimal? minPrice, decimal? maxPrice, string? sortOrder, int page = 1, int pageSize = 6)
         {
             // Lấy tất cả danh mục sản phẩm để hiển thị trong dropdown
             ViewBag.Categories = await _context.TbProductCategories.ToListAsync();
