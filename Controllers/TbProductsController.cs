@@ -25,26 +25,32 @@ namespace TT_ECommerce.Controllers
         {
             // Lấy tất cả danh mục sản phẩm để hiển thị trong dropdown
             ViewBag.Categories = await _context.TbProductCategories.ToListAsync();
+
             // Truy vấn sản phẩm từ database
             var productsQuery = _context.TbProducts
                 .Include(p => p.ProductCategory)
                 .Include(p => p.TbProductImages)
                 .AsQueryable();
+
             // Lọc theo danh mục
             if (!string.IsNullOrEmpty(categoryId))
             {
                 var selectedCategoryIds = categoryId.Split(',').Select(int.Parse).ToList();
                 productsQuery = productsQuery.Where(p => selectedCategoryIds.Contains(p.ProductCategoryId));
             }
+
             // Lọc theo từ khóa tìm kiếm
             if (!string.IsNullOrEmpty(search))
             {
                 productsQuery = productsQuery.Where(p => p.Title.Contains(search) || p.Description.Contains(search));
             }
+
+            // Lọc theo giá
             if (maxPrice.HasValue)
             {
                 productsQuery = productsQuery.Where(p => p.Price <= maxPrice.Value);
             }
+
             // Sắp xếp theo giá
             switch (sortOrder)
             {
@@ -58,10 +64,12 @@ namespace TT_ECommerce.Controllers
                     productsQuery = productsQuery.OrderBy(p => p.Title); // Sắp xếp mặc định
                     break;
             }
+
             // Phân trang
             var totalItems = await productsQuery.CountAsync();
             var products = await productsQuery.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            // Tạo đối tượng phân trang (có thể sử dụng một ViewModel để truyền dữ liệu)
+
+            // Tạo đối tượng phân trang
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = totalItems;
@@ -69,6 +77,7 @@ namespace TT_ECommerce.Controllers
 
             return View(products);
         }
+
 
 
         // GET: TbProducts/Details/5
