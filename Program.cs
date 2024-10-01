@@ -76,6 +76,15 @@ app.UseSession();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
+      name: "areas",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+});
+
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
        name: "shop",
        pattern: "Shop",
        defaults: new { controller = "TbProducts", action = "Index" });
