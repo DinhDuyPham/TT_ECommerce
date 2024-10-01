@@ -1,12 +1,12 @@
 ﻿/* Điều chỉnh khoảng cách giữa navbar và content */
 .navbar {
     margin-bottom: 0;
-    height: 60px; /* Hoặc chiều cao phù hợp */
+    height: 10px; /* Hoặc chiều cao phù hợp */
 }
 
 /* Điều chỉnh content-wrapper */
 .content-wrapper {
-    padding-top: 10px; /* Giảm padding phía trên */
+    padding-top: 0px; /* Giảm padding phía trên */
     margin-top: 0;
 }
 
