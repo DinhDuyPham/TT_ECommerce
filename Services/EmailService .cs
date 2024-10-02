@@ -6,9 +6,9 @@ namespace TT_ECommerce.Services
 {
     public class EmailService
     {
-        private readonly string _fromEmail = "2100008358@nttu.edu.vn";
+        private readonly string _fromEmail = "hoangtuavatar2x@gmail.com";
         private readonly string _fromName = "TT_ECommerce";
-        private readonly string _fromPassword = "Nttu@11072003@";
+        private readonly string _fromPassword = "psae wane kftu mkio\r\n";
         private readonly string _smtpHost = "smtp.gmail.com";
         private readonly int _smtpPort = 587;
 
