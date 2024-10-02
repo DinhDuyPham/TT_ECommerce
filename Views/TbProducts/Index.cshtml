@@ -101,8 +101,17 @@
                                 <a href="@Url.Action("ProductDetails", new { id = product.Id })" style="text-decoration: none;">
                                     <h3 class="product-title">@product.Title</h3>
                                 </a>
-                                <strong class="product-price">@product.Price.ToString("C")</strong>
-                                <span class="original-price">@product.OriginalPrice.ToString("C")</span>
+                                @if (product.IsSale)
+                                {
+                                    <!-- Hiển thị giá khuyến mãi nếu sản phẩm đang giảm giá -->
+                                    <strong class="product-price">@product.PriceSale</strong>
+                                    <span class="original-price" style="text-decoration: line-through;">@product.Price.ToString("C")</span>
+                                }
+                                else
+                                {
+                                    <!-- Hiển thị giá gốc nếu không có giảm giá -->
+                                    <strong class="product-price">@product.Price.ToString("C")</strong>
+                                }
                                 <span class="icon-cross">
                                     <img src="~/images/cross.svg" class="img-fluid" />
                                 </span>

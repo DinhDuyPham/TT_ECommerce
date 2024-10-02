@@ -46,22 +46,26 @@ namespace TT_ECommerce.Controllers
             }
 
             // Lọc theo giá
-            if (maxPrice.HasValue)
+            if (minPrice.HasValue || maxPrice.HasValue)
             {
-                productsQuery = productsQuery.Where(p => p.Price <= maxPrice.Value);
+                // Nếu sản phẩm có giá khuyến mãi, lọc theo PriceSale, nếu không thì lọc theo Price
+                productsQuery = productsQuery.Where(p =>
+                    (p.IsSale && p.PriceSale >= (minPrice ?? 0) && p.PriceSale <= (maxPrice ?? decimal.MaxValue)) ||
+                    (!p.IsSale && p.Price >= (minPrice ?? 0) && p.Price <= (maxPrice ?? decimal.MaxValue))
+                );
             }
 
             // Sắp xếp theo giá
             switch (sortOrder)
             {
                 case "price_asc":
-                    productsQuery = productsQuery.OrderBy(p => p.Price);
+                    productsQuery = productsQuery.OrderBy(p => p.IsSale ? p.PriceSale : p.Price);
                     break;
                 case "price_desc":
-                    productsQuery = productsQuery.OrderByDescending(p => p.Price);
+                    productsQuery = productsQuery.OrderByDescending(p => p.IsSale ? p.PriceSale : p.Price);
                     break;
                 default:
-                    productsQuery = productsQuery.OrderBy(p => p.Title); // Sắp xếp mặc định
+                    productsQuery = productsQuery.OrderBy(p => p.Title); // Sắp xếp mặc định theo tên sản phẩm
                     break;
             }
 
@@ -78,10 +82,8 @@ namespace TT_ECommerce.Controllers
             return View(products);
         }
 
-
-
         // GET: TbProducts/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> ProductDetails(int? id)
         {
             if (id == null)
             {
@@ -99,6 +101,5 @@ namespace TT_ECommerce.Controllers
             return View(tbProduct);
         }
 
-       
     }
 }
