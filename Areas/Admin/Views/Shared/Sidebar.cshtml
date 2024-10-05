@@ -51,7 +51,7 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a asp-area="Admin" asp-controller="DanhMucSanPham" asp-action="Index" >
+                                <a href="@Url.Action("Index", "ProductManager")" >
                                     <span class="sub-item">Danh Mục Sản Phẩm</span>
                                 </a>
                             </li>
@@ -126,7 +126,7 @@
                     <div class="collapse" id="maps">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="maps/googlemaps.html">
+                                <a href="@Url.Action("Index", "UserManager")">
                                     <span class="sub-item">Danh sách tài khoản</span>
                                 </a>
                             </li>
