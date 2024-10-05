@@ -26,14 +26,23 @@
                     <div class="col-lg-6">
                         <div class="border rounded">
                             <a href="#">
-                                <img src="productdetails/img/single-item.jpg" class="img-fluid rounded" alt="Image">
+                                <img src="@Url.Content(Model.Image)" class="img-fluid rounded" alt="Image">
                             </a>
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <h4 class="fw-bold mb-3">Brocoli</h4>
+                        <h4 class="fw-bold mb-3">@Url.Content(Model.Title)</h4>
                         <p class="mb-3">Category: Vegetables</p>
-                        <h5 class="fw-bold mb-3">3,35 $</h5>
+                        @if (Model.IsSale)
+                        {
+                            <h5 class="fw-bold mb-3">@Model.PriceSale?.ToString("C")</h5> <!-- Giá bán -->
+                            <span class="original-price" style="text-decoration: line-through;">@Model.Price.ToString("C")</span> <!-- Giá gốc -->
+                        }
+                        else
+                        {
+                            <h5 class="fw-bold mb-3">@Model.Price.ToString("C")</h5> <!-- Giá gốc nếu không có giảm giá -->
+                        }
+
                         <div class="d-flex mb-4">
                             <i class="fa fa-star text-secondary"></i>
                             <i class="fa fa-star text-secondary"></i>
@@ -41,8 +50,8 @@
                             <i class="fa fa-star text-secondary"></i>
                             <i class="fa fa-star"></i>
                         </div>
-                        <p class="mb-4">The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc.</p>
-                        <p class="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish</p>
+                        <p class="mb-4">@Url.Content(Model.Description)</p>
+                     @*    <p class="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish</p> *@
                         <div style="display: flex; align-items: center; padding: 10px;">
                             <button style="background-color: #525852; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 18px;"
                                     onclick="decrement()">
@@ -77,12 +86,10 @@
                         <div class="tab-content mb-5">
                             <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
                                 <p>
-                                    The generated Lorem Ipsum is therefore always free from repetition injected humour, or non-characteristic words etc.
-                                    Susp endisse ultricies nisi vel quam suscipit
+                                    @Url.Content(Model.Description)
                                 </p>
                                 <p>
-                                    Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish filefish Antarctic
-                                    icefish goldeye aholehole trumpetfish pilot fish airbreathing catfish, electric ray sweeper.
+                                    @Url.Content(Model.Detail)
                                 </p>
                                 <div class="px-2">
                                     <div class="row g-4">

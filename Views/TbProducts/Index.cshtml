@@ -98,9 +98,14 @@
                         <div class="col-12 col-md-6 col-lg-4 mb-5">
                             <div class="product-item">
                                 <img src="@Url.Content(product.Image)" class="img-fluid product-thumbnail" alt="Product Image" />
-                                <a href="@Url.Action("ProductDetails", new { id = product.Id })" style="text-decoration: none;">
+                                @* <a href="@Url.Action("ProductDetails", new { id = product.Id })" style="text-decoration: none;">
                                     <h3 class="product-title">@product.Title</h3>
-                                </a>
+                                </a> *@
+                                @* truyền vào file index chạy trong file ProductDetails *@
+                                    <a href="@Url.Action("Index", "ProductDetails", new { id = product.Id })" target="_blank" style="text-decoration: none;">
+                                      <h3 class="product-title">@product.Title</h3> 
+    </a>
+
                                 @if (product.IsSale)
                                 {
                                     <!-- Hiển thị giá khuyến mãi nếu sản phẩm đang giảm giá -->
