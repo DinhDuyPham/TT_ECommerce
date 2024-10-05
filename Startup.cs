@@ -66,12 +66,17 @@ namespace TT_ECommerce
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+<<<<<<< HEAD
                 // Đường dẫn cho các khu vực
                 endpoints.MapAreaControllerRoute(
                     name: "admin",
                     areaName: "Admin",
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
             });
+=======
+
+            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+>>>>>>> 396affb8a0232d4269cf98d3dc7d04d15f41ef7b
         }
     }
 }
