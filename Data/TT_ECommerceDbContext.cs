@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using TT_ECommerce.Models;
 using TT_ECommerce.Models.EF;
 
 namespace TT_ECommerce.Data
@@ -26,18 +27,22 @@ namespace TT_ECommerce.Data
         public virtual DbSet<TbSubscribe> TbSubscribes { get; set; }
         public virtual DbSet<TbSystemSetting> TbSystemSettings { get; set; }
         public virtual DbSet<ThongKe> ThongKes { get; set; }
+        public DbSet<UserAdmin> UserAdmins { get; set; } // Thêm dòng này
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=THANHNHAN\\SQLEXPRESS;Initial Catalog=TT_ECommerce;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
+                optionsBuilder.UseSqlServer("Data Source=HORSEY;Initial Catalog=TT_ECommerce;Persist Security Info=True;User ID=sa;Password=***********;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); // Ensure base method is called
+
+            // Ánh xạ lớp UserAdmin đến bảng Admin trong cơ sở dữ liệu
+            modelBuilder.Entity<UserAdmin>().ToTable("Admin");
 
             // Configure the IdentityUserRole entity
             modelBuilder.Entity<IdentityUserRole<string>>()

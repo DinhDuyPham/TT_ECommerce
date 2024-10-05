@@ -1,4 +1,8 @@
-﻿
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
 <!DOCTYPE html>
 <html lang="vi">
 
@@ -15,8 +19,6 @@
     <link rel="stylesheet" href="/admin/vendors/simple-line-icons/css/simple-line-icons.css">
     <link rel="stylesheet" href="/admin/vendors/css/vendor.bundle.base.css">
     <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
     <!-- inject:css -->
     <link rel="stylesheet" href="/admin/css/vertical-layout-light/style.css">
     <!-- endinject -->
@@ -35,15 +37,19 @@
                             </div>
                             <h4>Xin chào! Hãy bắt đầu ngay</h4>
                             <h6 class="fw-light">Đăng nhập để tiếp tục.</h6>
-                            <form class="pt-3">
+
+                            @using (Html.BeginForm("Index", "LoginAdmin", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-lg" id="exampleInputEmail1" placeholder="Tên đăng nhập">
+                                    @Html.TextBox("Acc", "", new { @class = "form-control", @placeholder = "Email", required = "required" })
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" class="form-control form-control-lg" id="exampleInputPassword1" placeholder="Mật khẩu">
+                                    @Html.Password("Pass", "", new { @class = "form-control", @placeholder = "Password", required = "required" })
                                 </div>
                                 <div class="mt-3">
-                                    <a class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" href="/admin/index.html">ĐĂNG NHẬP</a>
+                                    <button type="submit" class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">Đăng Nhập</button>
                                 </div>
                                 <div class="my-2 d-flex justify-content-between align-items-center">
                                     <div class="form-check">
@@ -62,7 +68,15 @@
                                 <div class="text-center mt-4 fw-light">
                                     Chưa có tài khoản? <a href="register.html" class="text-primary">Đăng ký</a>
                                 </div>
-                            </form>
+                            }
+
+                            <!-- Hiển thị thông báo lỗi nếu có -->
+                            @if (!ViewData.ModelState.IsValid)
+                            {
+                                <div class="alert alert-danger mt-3">
+                                    @Html.ValidationSummary()
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -75,9 +89,6 @@
     <!-- plugins:js -->
     <script src="/admin/vendors/js/vendor.bundle.base.js"></script>
     <!-- endinject -->
-    <!-- Plugin js for this page -->
-    <script src="/admin/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-    <!-- End plugin js for this page -->
     <!-- inject:js -->
     <script src="/admin/js/off-canvas.js"></script>
     <script src="/admin/js/hoverable-collapse.js"></script>
@@ -88,4 +99,3 @@
 </body>
 
 </html>
-

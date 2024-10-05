@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,13 @@ using TT_ECommerce.Models.EF;
 using TT_ECommerce.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/LoginAdmin"; // Đường dẫn đến trang đăng nhập
+        options.LogoutPath = "/LoginAdmin/"; // Đường dẫn đến trang đăng xuất
+    });
 
 // Cấu hình chuỗi kết nối đến cơ sở dữ liệu
 builder.Services.AddDbContext<TT_ECommerceDbContext>(options =>
@@ -73,13 +81,15 @@ app.UseAuthorization();
 // Kích hoạt middleware Session
 app.UseSession();
 
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-      name: "areas",
-      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
 });
+
 
 
 app.UseEndpoints(endpoints =>
@@ -87,7 +97,9 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
        name: "shop",
        pattern: "Shop",
-       defaults: new { controller = "TbProducts", action = "Index" });
+       defaults: new { controller = "TbProducts", action = "Index" 
+       });
+
 
     endpoints.MapControllerRoute(
         name: "default",

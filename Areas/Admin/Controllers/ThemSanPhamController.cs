@@ -2,9 +2,9 @@
 
 namespace TT_ECommerce.Areas.Admin.Controllers
 {
-    public class LoginAdminController : Controller
+    [Area("Admin")] // Correct attribute for areas
+    public class ThemSanPhamController : Controller
     {
-        [Area("Admin")]
         public IActionResult Index()
         {
             return View();
