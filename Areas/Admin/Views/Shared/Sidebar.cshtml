@@ -51,14 +51,10 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a asp-area="Admin" asp-controller="DanhMucSanPham" asp-action="Index" >
-                                    <span class="sub-item">Danh Mục Sản Phẩm</span>
-                                </a>
+                                @Html.ActionLink("Danh Mục Sản Phẩm", "Index", "DanhMucSanPham", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                             <li>
-                                <a href="components/buttons.html">
-                                    <span class="sub-item">Thêm sản phẩm</span>
-                                </a>
+                                @Html.ActionLink("Thêm sản phẩm", "Index", "ThemSanPham", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                             
                         </ul>
@@ -73,9 +69,7 @@
                     <div class="collapse" id="sidebarLayouts">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="sidebar-style-2.html">
-                                    <span class="sub-item">Quản lý đơn hàng</span>
-                                </a>
+                                @Html.ActionLink("Đơn Hàng", "Index", "DonHang", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                         </ul>
                     </div>
@@ -105,9 +99,7 @@
                     <div class="collapse" id="tables">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="tables/tables.html">
-                                    <span class="sub-item">Thêm bài viết</span>
-                                </a>
+                                @Html.ActionLink("Thêm bài viết", "Index", "ThemBaiViet", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                             <li>
                                 <a href="tables/datatables.html">
