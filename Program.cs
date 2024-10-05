@@ -16,7 +16,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/LoginAdmin"; // Đường dẫn đến trang đăng nhập
-        options.LogoutPath = "/LoginAdmin/"; // Đường dẫn đến trang đăng xuất
+        options.LogoutPath = "/LoginAdmin/Logout"; // Đường dẫn đến trang đăng xuất
     });
 
 // Cấu hình chuỗi kết nối đến cơ sở dữ liệu
