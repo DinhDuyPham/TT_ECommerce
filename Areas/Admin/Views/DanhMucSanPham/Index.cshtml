@@ -4,8 +4,12 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<h2>Danh Mục Sản Phẩm</h2>
+
+<div class="container">
+    <div class="page-inner">
         <div class="page-header">
-            <h3 class="fw-bold mb-3">Quản lý sản phẩm</h3>
+            <h3 class="fw-bold mb-3">DataTables.Net</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                     <a href="#">
@@ -16,16 +20,21 @@
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Danh mục sản phẩm</a>
+                    <a href="#">Tables</a>
                 </li>
-               
+                <li class="separator">
+                    <i class="icon-arrow-right"></i>
+                </li>
+                <li class="nav-item">
+                    <a href="#">Datatables</a>
+                </li>
             </ul>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Sản phẩm</h4>
+                        <h4 class="card-title">Basic</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -33,12 +42,12 @@
                                    class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Tên sản phẩm</th>
-                                        <th>Giá sản phẩm</th>
-                                        <th>Nhà cung cấp</th>
-                                        <th>Số lượng tồn</th>
-                                        <th>Ngày nhập</th>
-                                        <th>Ngày xuất</th>
+                                        <th>Name</th>
+                                        <th>Position</th>
+                                        <th>Office</th>
+                                        <th>Age</th>
+                                        <th>Start date</th>
+                                        <th>Salary</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
@@ -1352,3 +1361,5 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
