@@ -55,7 +55,13 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
+<<<<<<< HEAD
                                 @Html.ActionLink("Danh Mục Sản Phẩm", "Index", "DanhMucSanPham", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
+=======
+                                <a href="@Url.Action("Index", "ProductManager")" >
+                                    <span class="sub-item">Danh Mục Sản Phẩm</span>
+                                </a>
+>>>>>>> b4ae7a36c01158784e11ad632d13d281c156eeb0
                             </li>
                             <li>
                                 @Html.ActionLink("Thêm sản phẩm", "Index", "ThemSanPham", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
@@ -126,27 +132,23 @@
                     <div class="collapse" id="maps">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="maps/googlemaps.html">
+                                <a href="@Url.Action("Index", "UserManager")">
                                     <span class="sub-item">Danh sách tài khoản</span>
                                 </a>
                             </li>
-<<<<<<< HEAD
 
-=======
-                           
->>>>>>> 396affb8a0232d4269cf98d3dc7d04d15f41ef7b
                         </ul>
                     </div>
                 </li>
                 <li class="nav-item">
-<<<<<<< HEAD
+
                     <a asp-controller="LoginAdmin" class="fa-solid fa-right-from-bracket" asp-action="Logout">Đăng xuất</a>
-=======
+
                     <a data-bs-toggle="collapse" href="#maps">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <p>Đăng xuất</p>
                     </a>
->>>>>>> 396affb8a0232d4269cf98d3dc7d04d15f41ef7b
+
                 </li>
             </ul>
         </div>

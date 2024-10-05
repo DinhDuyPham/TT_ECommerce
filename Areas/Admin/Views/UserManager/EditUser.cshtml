@@ -1,0 +1,17 @@
+﻿@model TT_ECommerce.Areas.Admin.Models.EditUserModel
+@{
+    ViewBag.Title = "Gán vai trò cho người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<form asp-controller="Admin" asp-action="EditUser " method="post">
+    <input type="hidden" asp-for="UserId" />
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

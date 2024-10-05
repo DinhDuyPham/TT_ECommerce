@@ -34,6 +34,7 @@ namespace TT_ECommerce.Data
             if (!optionsBuilder.IsConfigured)
             {
 
+
                 optionsBuilder.UseSqlServer("Data Source=HORSEY;Initial Catalog=TT_ECommerce;Persist Security Info=True;User ID=sa;Password=***********;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
 
             }
