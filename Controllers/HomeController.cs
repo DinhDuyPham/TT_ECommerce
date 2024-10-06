@@ -2,14 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
 using Microsoft.EntityFrameworkCore;
+using TT_ECommerce.Data;
 namespace TT_ECommerce.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    private readonly TT_ECommerceDbContext _context;
+    public HomeController(TT_ECommerceDbContext context, ILogger<HomeController> logger)
     {
+        _context = context;
         _logger = logger;
     }
 
@@ -17,7 +20,6 @@ public class HomeController : Controller
     {
         return View();
     }
-
     public IActionResult Privacy()
     {
         return View();
