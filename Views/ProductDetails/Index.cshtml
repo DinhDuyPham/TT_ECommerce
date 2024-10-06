@@ -30,7 +30,7 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                  @*   <div class="col-lg-6">
                         <h4 class="fw-bold mb-3">@Url.Content(Model.Title)</h4>
                         <p class="mb-3">Category: Vegetables</p>
                         @if (Model.IsSale)
@@ -52,7 +52,7 @@
                         </div>
                         <p class="mb-4">@Url.Content(Model.Description)</p>
                      @*    <p class="mb-4">Susp endisse ultricies nisi vel quam suscipit. Sabertooth peacock flounder; chain pickerel hatchetfish, pencilfish snailfish</p> *@
-                        <div style="display: flex; align-items: center; padding: 10px;">
+                        @* <div style="display: flex; align-items: center; padding: 10px;"> 
                             <button style="background-color: #525852; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 18px;"
                                     onclick="decrement()">
                                 -
@@ -67,7 +67,54 @@
                         </div>
 
                         
+                    </div> *@
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">@Url.Content(Model.Title)</h4>
+                        <p class="mb-3">Category: Vegetables</p>
+
+                        @if (Model.IsSale)
+                        {
+                            <h5 class="fw-bold mb-3">@Model.PriceSale?.ToString("C")</h5> <!-- Giá bán -->
+                            <span class="original-price" style="text-decoration: line-through;">@Model.Price.ToString("C")</span> <!-- Giá gốc -->
+                        }
+                        else
+                        {
+                            <h5 class="fw-bold mb-3">@Model.Price.ToString("C")</h5> <!-- Giá gốc nếu không có giảm giá -->
+                        }
+
+                        <div class="d-flex mb-4">
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star text-secondary"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+
+                        <p class="mb-4">@Url.Content(Model.Description)</p>
+
+                        <form asp-action="AddToCart" method="post">
+                            <div style="display: flex; align-items: center; padding: 10px;">
+                                <button type="button" style="background-color: #525852; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                                        onclick="decrement()">
+                                    -
+                                </button>
+                                <input type="text" id="number" name="quantity" value="1" readonly
+                                       style="width: 50px; text-align: center; border: 1px solid #ccc; border-radius: 5px; margin: 0 10px; font-size: 18px;">
+                                <button type="button" style="background-color: #525852; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 18px;"
+                                        onclick="increment()">
+                                    +
+                                </button>
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <button type="submit" style="background-color: #525852; color: white; border: none; padding: 5px 15px; border-radius: 5px; cursor: pointer; font-size: 18px; margin-left: 20px;">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </form>
+
                     </div>
+
+   
+
                     <div class="col-lg-12">
                         <nav>
                             <div class="nav nav-tabs mb-3">
