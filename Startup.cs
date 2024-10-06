@@ -20,26 +20,19 @@ namespace TT_ECommerce
         // Cấu hình các dịch vụ
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
-            // Cấu hình xác thực với cookie
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/LoginAdmin"; // Đường dẫn đến trang đăng nhập
-                    options.LogoutPath = "/LoginAdmin/Logout"; // Đường dẫn đến trang đăng xuất
+                    options.LoginPath = "/LoginAdmin"; // Trang đăng nhập
+                   
                 });
 
             services.AddControllersWithViews();
 
-            // Sử dụng chuỗi kết nối từ appsettings.json
             services.AddDbContext<TT_ECommerceDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddControllersWithViews();
         }
 
-        // Cấu hình middleware
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -57,8 +50,8 @@ namespace TT_ECommerce
 
             app.UseRouting();
 
-            app.UseAuthentication(); // Đảm bảo sử dụng xác thực
-            app.UseAuthorization();
+            app.UseAuthentication(); // Cấu hình middleware xác thực
+            app.UseAuthorization();  // Cấu hình middleware ủy quyền
 
             app.UseEndpoints(endpoints =>
             {
@@ -66,16 +59,12 @@ namespace TT_ECommerce
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-                // Đường dẫn cho các khu vực
                 endpoints.MapAreaControllerRoute(
                     name: "admin",
                     areaName: "Admin",
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
             });
-
-            // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-
         }
+
     }
 }
