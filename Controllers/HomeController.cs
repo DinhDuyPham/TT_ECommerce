@@ -2,31 +2,51 @@
 using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
 using Microsoft.EntityFrameworkCore;
-namespace TT_ECommerce.Controllers;
+using TT_ECommerce.Data;
 
-public class HomeController : Controller
+namespace TT_ECommerce.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        private readonly ILogger<HomeController> _logger;
+        private readonly TT_ECommerceDbContext _context; // Khai báo DbContext
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        // Inject cả ILogger và DbContext vào constructor
+        public HomeController(ILogger<HomeController> logger, TT_ECommerceDbContext context)
+        {
+            _logger = logger;
+            _context = context; // Khởi tạo DbContext
+            ViewBag.CartItemCount = GetCartItemCount(); // Gọi GetCartItemCount ở đây
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        // Hàm tính tổng số lượng sản phẩm trong giỏ hàng
+        private int GetCartItemCount()
+        {
+            // Kiểm tra nếu _context hoặc DbSet là null
+            if (_context == null || _context.TbOrderDetails == null)
+            {
+                return 0; // Trả về 0 nếu _context hoặc TbOrderDetails không tồn tại
+            }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
+            // Tính tổng số lượng sản phẩm trong giỏ hàng
+            var cartItemCount = _context.TbOrderDetails.Sum(od => od.Quantity);
+            return cartItemCount;
+        }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }

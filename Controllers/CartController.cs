@@ -23,6 +23,8 @@ namespace TT_ECommerce.Controllers
                     .ThenInclude(d => d.Product) // Giả sử TbOrderDetail có một mối quan hệ với TbProduct
                 .ToList();
 
+            // Lấy tổng số lượng sản phẩm trong giỏ hàng và lưu vào ViewBag
+            ViewBag.CartItemCount = GetCartItemCount();
             return View(cartItems);
         }
 
@@ -33,42 +35,69 @@ namespace TT_ECommerce.Controllers
         }
 
         // Xử lý form thêm sản phẩm vào giỏ hàng
-      
+
         [HttpPost]
-        public IActionResult Create(int productId, int quantity)
+        public async Task<IActionResult> Create(int productId, int quantity)
         {
             if (quantity <= 0)
             {
                 ModelState.AddModelError("", "Số lượng phải lớn hơn 0.");
+                ViewBag.CartItemCount = await GetCartItemCountAsync();
                 return View();
             }
 
-            var product = _context.TbProducts.Find(productId); // Thay Id bằng productId
+            var existingOrderDetail = await _context.TbOrderDetails
+                .Include(od => od.Order)
+                .FirstOrDefaultAsync(od => od.ProductId == productId && od.Order.Status == null);
 
-            if (product == null)
+            if (existingOrderDetail != null)
             {
-                return NotFound();
+                existingOrderDetail.Quantity += quantity;
+
+                var order = existingOrderDetail.Order;
+                order.TotalAmount += existingOrderDetail.Price * quantity;
+
+                _context.TbOrderDetails.Update(existingOrderDetail);
+                _context.TbOrders.Update(order);
+            }
+            else
+            {
+                var product = await _context.TbProducts.FindAsync(productId);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+
+                var order = new TbOrder
+                {
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                    TbOrderDetails = new List<TbOrderDetail>
+            {
+                new TbOrderDetail
+                {
+                    ProductId = productId,
+                    Quantity = quantity,
+                    Price = product.Price
+                }
+            },
+                    TotalAmount = product.Price * quantity
+                };
+
+                await _context.TbOrders.AddAsync(order);
             }
 
+            await _context.SaveChangesAsync();
+            ViewBag.CartItemCount = await GetCartItemCountAsync();
 
-            var order = new TbOrder
-            {
-                CreatedDate = DateTime.Now,
-                ModifiedDate = DateTime.Now,
-                TbOrderDetails = new List<TbOrderDetail>
-        {
-            new TbOrderDetail
-            {
-                ProductId = productId,
-                Quantity = quantity
-            }
-        }
-            };
-
-            // Thêm đơn hàng vào giỏ hàng
-            _context.TbOrders.Add(order);
-            _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        private async Task<int> GetCartItemCountAsync()
+        {
+            return await _context.TbOrderDetails
+                .Where(od => od.Order.Status == null) // Giả sử chúng ta chỉ muốn đếm các đơn hàng hoạt động
+                .SumAsync(od => od.Quantity);
         }
 
 
@@ -162,6 +191,12 @@ namespace TT_ECommerce.Controllers
             return RedirectToAction("Index"); // Quay lại trang giỏ hàng
         }
 
+        public int GetCartItemCount()
+        {
+            // Tính tổng số lượng sản phẩm trong tất cả các chi tiết đơn hàng
+            var cartItemCount = _context.TbOrderDetails.Sum(od => od.Quantity);
+            return cartItemCount;
+        }
 
 
 
