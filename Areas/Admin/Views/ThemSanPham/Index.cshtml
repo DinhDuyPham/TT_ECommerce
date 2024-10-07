@@ -1,4 +1,4 @@
-﻿@model TT_ECommerce.Models.EF.TbProduct
+﻿@model IEnumerable<TT_ECommerce.Models.EF.TbProduct>
 
 @{
     ViewData["Title"] = "Index";
@@ -50,8 +50,8 @@
 
             <div class="form-group">
                 <div class="card-action">
-                    <button class="btn btn-success">Submit</button>
-                    <button class="btn btn-danger">Cancel</button>
+                    <a asp-action="Create" class="btn btn-success">Submit</a>
+                    <a asp-action="Cancel" class="btn btn-danger">Cancel</a>
                 </div>
             </div>
         </form>
@@ -62,7 +62,7 @@
             <label asp-for="Price" class="control-label">Ảnh sản phẩm</label>
             <div class="form-group">
                 <label for="exampleFormControlFile1">Chọn ảnh</label>
-                <input type="file" class="form-control-file" id="exampleFormControlFile1" accept="image/*" onchange="previewImage(event)" />
+<input type="file" class="form-control-file" id="exampleFormControlFile1" accept="image/*" onchange="previewImage(event)" />
 
                 <!-- Thẻ img để hiển thị hình ảnh đã chọn -->
                 <img id="preview" src="#" alt="Preview Image" style="display:none; max-width: 100%; height: auto; margin-top: 10px;" />
@@ -70,6 +70,3 @@
         </div>
     </div>
 </div>
-
-
-
