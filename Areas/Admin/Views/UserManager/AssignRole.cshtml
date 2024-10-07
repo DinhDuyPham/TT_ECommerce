@@ -23,7 +23,7 @@
 <form asp-action="AssignRole" method="post">
     <input type="hidden" name="userId" value="@Model.UserId" />
 
-    <div>
+    <div class="form-group">
         <h4>Chọn vai trò:</h4>
         @foreach (var role in Model.Roles)
         {
@@ -38,7 +38,8 @@
         }
     </div>
 
-    <button type="submit" class="btn btn-primary">Gán vai trò</button>
-    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Gán vai trò</button>
+        <a href="@Url.Action("Index", "UserManager")" class="btn btn-secondary">Quay lại</a>
+    </div>
 </form>
-

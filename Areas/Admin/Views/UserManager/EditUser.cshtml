@@ -1,17 +1,42 @@
 ﻿@model TT_ECommerce.Areas.Admin.Models.EditUserModel
 @{
-    ViewBag.Title = "Gán vai trò cho người dùng";
+    ViewBag.Title = "Chỉnh sửa thông tin người dùng";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
-<form asp-controller="Admin" asp-action="EditUser " method="post">
+
+<h2>@ViewBag.Title</h2>
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+<form asp-area="Admin" asp-controller="UserManager" asp-action="EditUser" method="post">
     <input type="hidden" asp-for="UserId" />
+
     <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
+        <label asp-for="UserName">Tên tài khoản</label>
+        <input asp-for="UserName" class="form-control" required placeholder="Nhập tên tài khoản" value="@Model.UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="UserName"></label>
-        <input asp-for="UserName" class="form-control" />
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" class="form-control" required type="email" placeholder="Nhập địa chỉ email" value="@Model.Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+
+    <button type="submit" class="btn btn-primary">Lưu</button>
+
+    <a href="@Url.Action("Index", "UserManager")" class="btn btn-secondary">Quay lại</a>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            <ul>
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    }
 </form>
+

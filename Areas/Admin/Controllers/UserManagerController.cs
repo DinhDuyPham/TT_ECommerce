@@ -137,31 +137,62 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             }
 
             var model = new EditUserModel
-        {
+            {
                 UserId = user.Id,
                 Email = user.Email,
                 UserName = user.UserName
-        };
+            };
 
             return View(model);
         }
-
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserModel model)
         {
+            // Kiểm tra ModelState
+            if (!ModelState.IsValid)
+            {
+                // In ra thông tin model để kiểm tra
+                Console.WriteLine($"UserId: {model.UserId}, UserName: {model.UserName}, Email: {model.Email}");
+
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ErrorMessage); // In ra thông báo lỗi
+                }
+                return View(model);
+            }
+
+            // Tìm người dùng theo UserId
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
             {
-                return NotFound();
+                return NotFound(); // Trả về lỗi nếu không tìm thấy người dùng
             }
 
+            // Cập nhật thông tin người dùng
             user.Email = model.Email;
             user.UserName = model.UserName;
 
-            await _userManager.UpdateAsync(user);
+            // Cập nhật thông tin người dùng trong cơ sở dữ liệu
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                // Nếu có lỗi khi cập nhật, thêm lỗi vào ModelState
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
 
+                // Ghi log lỗi
+                Console.WriteLine("Lỗi khi cập nhật người dùng: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+
+                return View(model); // Trả về view với thông tin lỗi
+            }
+
+            // Chuyển hướng về trang danh sách người dùng nếu thành công
             return RedirectToAction("Index");
         }
+
 
 
     }
