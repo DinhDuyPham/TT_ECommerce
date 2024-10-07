@@ -1,24 +1,28 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace TT_ECommerce.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class RolesController : Controller
     {
-        // GET: RolesController
-        public ActionResult Index()
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public RolesController(RoleManager<IdentityRole> roleManager)
         {
-            return View();
+            _roleManager = roleManager;
         }
 
-        // GET: RolesController/Details/5
-        public ActionResult Details(int id)
+        // GET: RolesController
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var roles = _roleManager.Roles; // Lấy tất cả vai trò
+            return View(roles);
         }
 
         // GET: RolesController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
@@ -26,58 +30,98 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         // POST: RolesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(string roleName)
         {
-            try
+            if (!string.IsNullOrEmpty(roleName))
             {
-                return RedirectToAction(nameof(Index));
+                var roleExists = await _roleManager.RoleExistsAsync(roleName);
+                if (!roleExists)
+                {
+                    // Tạo vai trò mới
+                    var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Lỗi khi tạo vai trò.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Vai trò này đã tồn tại.");
+                }
             }
-            catch
+            else
             {
-                return View();
+                ModelState.AddModelError("", "Tên vai trò không được để trống.");
             }
+
+            return View();
         }
 
         // GET: RolesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
-            return View();
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+            return View(role);
         }
 
         // POST: RolesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(string id, string roleName)
         {
-            try
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+
+            role.Name = roleName;
+            var result = await _roleManager.UpdateAsync(role);
+            if (result.Succeeded)
             {
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+
+            ModelState.AddModelError("", "Lỗi khi chỉnh sửa vai trò.");
+            return View(role);
         }
 
         // GET: RolesController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(string id)
         {
-            return View();
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                return NotFound();
+            }
+            return View(role);
         }
 
         // POST: RolesController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            try
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role != null)
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                ModelState.AddModelError("", "Lỗi khi xóa vai trò.");
             }
-            catch
-            {
-                return View();
-            }
+            return View(role);
         }
     }
 }
