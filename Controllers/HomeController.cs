@@ -3,32 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
 using Microsoft.EntityFrameworkCore;
 using TT_ECommerce.Data;
-<<<<<<< HEAD
-namespace TT_ECommerce.Controllers;
-=======
->>>>>>> featureCart
+
 
 namespace TT_ECommerce.Controllers
 {
-<<<<<<< HEAD
-    private readonly ILogger<HomeController> _logger;
 
-    private readonly TT_ECommerceDbContext _context;
-    public HomeController(TT_ECommerceDbContext context, ILogger<HomeController> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
-
-    public IActionResult Index()
-    {
-        return View();
-    }
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-=======
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -50,7 +29,6 @@ namespace TT_ECommerce.Controllers
             {
                 return 0; // Trả về 0 nếu _context hoặc TbOrderDetails không tồn tại
             }
->>>>>>> featureCart
 
             // Tính tổng số lượng sản phẩm trong giỏ hàng
             var cartItemCount = _context.TbOrderDetails.Sum(od => od.Quantity);
