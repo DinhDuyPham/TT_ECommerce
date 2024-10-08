@@ -40,11 +40,14 @@
                             </a>
                         }
                     </li>
+                    <!-- Icon giỏ hàng trong Layout.cshtml -->
                     <li>
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index">
+                        <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
                             <img src="~/images/cart.svg" alt="Cart" />
+                            <span class="badge bg-danger rounded-pill">@ViewBag.CartItemCount</span> <!-- Hiển thị số lượng sản phẩm -->
                         </a>
                     </li>
+
                     <li class="nav-item">
                         @if (User.Identity.IsAuthenticated)
                         {
