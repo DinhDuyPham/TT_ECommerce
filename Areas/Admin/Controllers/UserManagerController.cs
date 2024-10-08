@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using TT_ECommerce.Areas.Admin.Models;
-using TT_ECommerce.Models;
 
 namespace TT_ECommerce.Areas.Admin.Controllers
 {
@@ -50,7 +49,9 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            Console.WriteLine(user != null ? "User found" : "User not found");
+            Console.WriteLine("UserName: " + user.UserName);
+            Console.WriteLine("Email: " + user.Email);
             // Lấy vai trò hiện tại của người dùng
             var currentRoles = await _userManager.GetRolesAsync(user);
 
@@ -125,74 +126,174 @@ namespace TT_ECommerce.Areas.Admin.Controllers
 
             return View(model);
         }
-        // Phương thức chỉnh sửa thông tin người dùng
-        // Phương thức chỉnh sửa thông tin người dùng
+        [Route("EditUser")]
         [HttpGet]
         public async Task<IActionResult> EditUser(string? userId)
         {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            // Tìm người dùng bằng userId
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound();
+                return NotFound("User not found.");
             }
 
-            var model = new EditUserModel
+            // Khởi tạo model với thông tin người dùng
+            var model = new EditUserViewModel
             {
                 UserId = user.Id,
                 Email = user.Email,
-                UserName = user.UserName
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber // Lấy thông tin số điện thoại từ người dùng
             };
 
-            return View(model);
+            // Trả về view với model
+            return View(model); // Model phải được truyền vào đây
         }
+
+
+        [Route("EditUser")]
         [HttpPost]
-        public async Task<IActionResult> EditUser(EditUserModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditUser(EditUserViewModel model)
         {
-            // Kiểm tra ModelState
+            // Kiểm tra tính hợp lệ của model dựa trên các DataAnnotations trong EditUserViewModel
             if (!ModelState.IsValid)
             {
-                // In ra thông tin model để kiểm tra
-                Console.WriteLine($"UserId: {model.UserId}, UserName: {model.UserName}, Email: {model.Email}");
-
-                var errors = ModelState.Values.SelectMany(v => v.Errors);
-                foreach (var error in errors)
-                {
-                    Console.WriteLine(error.ErrorMessage); // In ra thông báo lỗi
-                }
-                return View(model);
+                return View(model); // Trả lại view với lỗi
             }
 
-            // Tìm người dùng theo UserId
+            // Tìm người dùng bằng UserId
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
             {
-                return NotFound(); // Trả về lỗi nếu không tìm thấy người dùng
+                return NotFound("User not found.");
+            }
+
+            // Kiểm tra email có bị trùng lặp với người dùng khác không
+            var existingUserByEmail = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUserByEmail != null && existingUserByEmail.Id != model.UserId)
+            {
+                ModelState.AddModelError("Email", "Email already exists.");
+                return View(model);
+            }
+
+            // Kiểm tra tên người dùng có bị trùng lặp với người dùng khác không
+            var existingUserByName = await _userManager.FindByNameAsync(model.UserName);
+            if (existingUserByName != null && existingUserByName.Id != model.UserId)
+            {
+                ModelState.AddModelError("UserName", "Username already exists.");
+                return View(model);
             }
 
             // Cập nhật thông tin người dùng
             user.Email = model.Email;
             user.UserName = model.UserName;
+            user.PhoneNumber = model.PhoneNumber; // Cập nhật số điện thoại
 
-            // Cập nhật thông tin người dùng trong cơ sở dữ liệu
+            // Cập nhật thông tin người dùng
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
-                // Nếu có lỗi khi cập nhật, thêm lỗi vào ModelState
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-
-                // Ghi log lỗi
-                Console.WriteLine("Lỗi khi cập nhật người dùng: " + string.Join(", ", result.Errors.Select(e => e.Description)));
-
-                return View(model); // Trả về view với thông tin lỗi
+                return View(model);
             }
 
-            // Chuyển hướng về trang danh sách người dùng nếu thành công
-            return RedirectToAction("Index");
+            // Nếu có yêu cầu thay đổi mật khẩu
+            if (!string.IsNullOrEmpty(model.Password))
+            {
+                // Xóa mật khẩu cũ và đặt mật khẩu mới
+                var passwordValidator = new PasswordValidator<IdentityUser>();
+                var passwordResult = await passwordValidator.ValidateAsync(_userManager, user, model.Password);
+
+                if (passwordResult.Succeeded)
+                {
+                    var removePasswordResult = await _userManager.RemovePasswordAsync(user);
+                    if (removePasswordResult.Succeeded)
+                    {
+                        var addPasswordResult = await _userManager.AddPasswordAsync(user, model.Password);
+                        if (!addPasswordResult.Succeeded)
+                        {
+                            foreach (var error in addPasswordResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                            return View(model);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var error in removePasswordResult.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, error.Description);
+                        }
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    foreach (var error in passwordResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("Index"); // Chuyển hướng về trang Index sau khi cập nhật thành công
         }
 
+        [Route("DeleteUser")]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmDeleteUser(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(); // Người dùng không tồn tại
+            }
+
+            var model = new DeleteUserViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Email = user.Email
+            };
+
+            return View(model); // Trả về view để xác nhận xóa
+        }
+
+        [Route("DeleteUser")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(string UserId)
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user == null)
+            {
+                return NotFound(); // Trả về 404 nếu người dùng không tồn tại
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index"); // Xóa thành công, quay lại danh sách người dùng
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View("Error"); // Trả về trang lỗi nếu xóa thất bại
+        }
 
 
     }
