@@ -55,16 +55,15 @@
                                     <td>@product.Alias</td>
                                     <td>
                                         <button asp-action="SuaSanPham" asp-route-id="@product.Id" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editRowModal" style="padding:10px">
-                                            <i class="fa fa-edit">
+                                            
                                                 <a asp-action="SuaSanPham" asp-route-id="@product.Id" > edit</a>
                                                
-                                            </i>
+                                            
                                         </button>
-                                        <button asp-action="XoaSanPham" asp-route-id="@product.Id" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editRowModal" style="padding:10px">
-                                            <i class="fa fa-edit">
-                                                <a asp-action="XoaSanPham" asp-route-id="@product.Id"> Xóa</a>
+                                        <button asp-action="Delete" asp-route-id="@product.Id" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editRowModal" style="padding:10px">
+                                            
+                                                <a asp-action="Delete" asp-route-id="@product.Id"> Xóa</a>
 
-                                            </i>
                                         </button>
                                     </td>
                                 </tr>
