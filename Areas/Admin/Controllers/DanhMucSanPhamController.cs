@@ -70,6 +70,42 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             }
             return View(category);
         }
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var danhMuc = await _context.TbProductCategories
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (danhMuc == null)
+            {
+                return NotFound();
+            }
+
+            return View(danhMuc);
+        }
+
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var danhMuc = await _context.TbProductCategories.FindAsync(id);
+            if (danhMuc != null)
+            {
+                _context.TbProductCategories.Remove(danhMuc);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool TbPostExists(int id)
+        {
+            return _context.TbPosts.Any(e => e.Id == id);
+        }
 
 
     }
