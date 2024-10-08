@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TT_ECommerce.Areas.Admin.Models;
 using TT_ECommerce.Data;
 using TT_ECommerce.Models.EF;
 
 namespace TT_ECommerce.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    // Gộp cái ThemBaiViet vô đây
+
+    [Area("Admin")] // Đúng thuộc tính cho khu vực admin
     public class PostsController : Controller
     {
         private readonly TT_ECommerceDbContext _context;
@@ -21,14 +18,72 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             _context = context;
         }
 
-        // GET: Admin/Posts
-        public async Task<IActionResult> Index()
+        // Hiển thị danh sách bài viết
+        public IActionResult Index()
         {
-            var tT_ECommerceDbContext = _context.TbPosts.Include(t => t.Category);
-            return View(await tT_ECommerceDbContext.ToListAsync());
+
+            var posts = _context.TbPosts.ToList();
+            return View(posts);
         }
 
-        // GET: Admin/Posts/Details/5
+        [Route("CreatePost")]
+        [HttpGet]
+        public IActionResult CreatePost()
+        {
+            ViewBag.CategoryList = new SelectList(_context.TbCategories, "Id", "Title");
+            return View();
+           
+        }
+
+        [Route("CreatePost")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreatePost(TbPost post)
+        {
+            if (ModelState.IsValid)
+            {
+                post.CreatedDate = DateTime.Now;
+                post.ModifiedDate = DateTime.Now;
+               
+                _context.TbPosts.Add(post);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(post);
+        }
+
+        [Route("EditPost")]
+        [HttpGet]
+        public IActionResult EditPost(int id)
+        {
+            var post = _context.TbPosts.Find(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+            return View(post);
+        }
+
+        [Route("EditPost")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPost(TbPost post)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Entry(post).State = EntityState.Modified;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(post);
+        }
+    
+
+
+
+
+
+// GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,82 +102,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             return View(tbPost);
         }
 
-        // GET: Admin/Posts/Create
-        public IActionResult Create()
-        {
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "Id", "Id");
-            return View();
-        }
-
-        // POST: Admin/Posts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Detail,Image,CategoryId,SeoTitle,SeoDescription,SeoKeywords,CreatedBy,CreatedDate,ModifiedDate,Modifiedby,Alias,IsActive")] TbPost tbPost)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(tbPost);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "Id", "Id", tbPost.CategoryId);
-            return View(tbPost);
-        }
-
-        // GET: Admin/Posts/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tbPost = await _context.TbPosts.FindAsync(id);
-            if (tbPost == null)
-            {
-                return NotFound();
-            }
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "Id", "Id", tbPost.CategoryId);
-            return View(tbPost);
-        }
-
-        // POST: Admin/Posts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Detail,Image,CategoryId,SeoTitle,SeoDescription,SeoKeywords,CreatedBy,CreatedDate,ModifiedDate,Modifiedby,Alias,IsActive")] TbPost tbPost)
-        {
-            if (id != tbPost.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(tbPost);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TbPostExists(tbPost.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.TbCategories, "Id", "Id", tbPost.CategoryId);
-            return View(tbPost);
-        }
 
         // GET: Admin/Posts/Delete/5
         public async Task<IActionResult> Delete(int? id)

@@ -100,12 +100,10 @@
                     <div class="collapse" id="tables">
                         <ul class="nav nav-collapse">
                             <li>
-                                @Html.ActionLink("Thêm bài viết", "Index", "ThemBaiViet", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
+                                @Html.ActionLink("Quản Lý Bài Viết ", "Index", "Posts", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                             <li>
-                                <a href="tables/datatables.html">
-                                    <span class="sub-item">Quản lý bài viết</span>
-                                </a>
+                                @Html.ActionLink("Thêm bài viết", "CreatePost", "Posts", new { area = "Admin" }, new { @class = "nav-link text-dark sub-item" })
                             </li>
                         </ul>
                     </div>
