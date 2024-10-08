@@ -39,7 +39,10 @@
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @await Html.PartialAsync("_Header")
-            @RenderBody()
+            <div>
+                 @RenderBody()
+            </div>
+
             @await Html.PartialAsync("_Footer")
         </main>
     </div>

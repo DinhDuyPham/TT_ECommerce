@@ -2,11 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
 using TT_ECommerce.Data;
+<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace TT_ECommerce.Controllers
 {
+=======
+
+
+namespace TT_ECommerce.Controllers
+{
+
+>>>>>>> 1ab26cb43de789abefe1876829c883272fb3720c
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
