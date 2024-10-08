@@ -2,19 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using TT_ECommerce.Models;
 using TT_ECommerce.Data;
-<<<<<<< HEAD
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using TT_ECommerce.Models.EF;
 
 namespace TT_ECommerce.Controllers
 {
-=======
-
-
-namespace TT_ECommerce.Controllers
-{
-
->>>>>>> 1ab26cb43de789abefe1876829c883272fb3720c
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -51,7 +44,21 @@ namespace TT_ECommerce.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult Subscribe(TbSubscribe model)
+        {
+            if (ModelState.IsValid)
+            {
+                // Lưu thông tin đăng ký vào cơ sở dữ liệu
+                _context.TbSubscribes.Add(model);
+                _context.SaveChanges();
 
+                // Thông báo thành công
+                TempData["SuccessMessage"] = "Subscription successful!";
+            }
+
+            return RedirectToAction("Index");
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

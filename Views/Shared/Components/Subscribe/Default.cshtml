@@ -1,0 +1,50 @@
+﻿@model TT_ECommerce.Models.EF.TbSubscribe
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+<!-- Start Footer Section -->
+<footer class="footer-section">
+    <div class="container relative">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="subscription-form">
+                    <h3 class="d-flex align-items-center">
+                        <span class="me-1">
+                            <img src="~/images/envelope-outline.svg" alt="Image" class="img-fluid" />
+                        </span>
+                        <span>Subscribe to Newsletter</span>
+                    </h3>
+                    <!-- Hiển thị thông báo thành công hoặc thất bại -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                    }
+                    else if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                    }
+                    <form method="post" asp-action="Subscribe">
+                        <div class="row g-3">
+                            <div class="col-auto">
+                                <input type="text" name="Name" class="form-control" placeholder="Enter your name" />
+                            </div>
+                            <div class="col-auto">
+                                <input type="email" name="Email" class="form-control" placeholder="Enter your email" />
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="fa fa-paper-plane"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- End Footer Section -->
+

@@ -9,5 +9,5 @@ public partial class TbSubscribe
 
     public string Email { get; set; } = null!;
 
-    public DateTime CreatedDate { get; set; }
+    public DateTime? CreatedDate { get; set; } = DateTime.Now;
 }
