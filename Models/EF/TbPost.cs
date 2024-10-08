@@ -14,9 +14,6 @@ public partial class TbPost
     public string? Detail { get; set; }
 
     public string? Image { get; set; }
-
-    public int CategoryId { get; set; }
-
     public string? SeoTitle { get; set; }
 
     public string? SeoDescription { get; set; }
@@ -30,10 +27,4 @@ public partial class TbPost
     public DateTime ModifiedDate { get; set; }
 
     public string? Modifiedby { get; set; }
-
-    public string? Alias { get; set; }
-
-    public bool IsActive { get; set; }
-
-    public virtual TbCategory Category { get; set; } = null!;
 }

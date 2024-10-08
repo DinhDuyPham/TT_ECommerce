@@ -14,10 +14,7 @@ namespace TT_ECommerce.Data
         }
 
         // DbSets for the application models
-        public virtual DbSet<TbAdv> TbAdvs { get; set; }
-        public virtual DbSet<TbCategory> TbCategories { get; set; }
         public virtual DbSet<TbContact> TbContacts { get; set; }
-        public virtual DbSet<TbNews> TbNews { get; set; }
         public virtual DbSet<TbOrder> TbOrders { get; set; }
         public virtual DbSet<TbOrderDetail> TbOrderDetails { get; set; }
         public virtual DbSet<TbPost> TbPosts { get; set; }
@@ -51,30 +48,6 @@ namespace TT_ECommerce.Data
             // Configure the IdentityUserRole entity
             modelBuilder.Entity<IdentityUserRole<string>>()
                 .HasKey(iur => new { iur.UserId, iur.RoleId });
-            modelBuilder.Entity<TbAdv>(entity =>
-            {
-                entity.HasKey(e => e.Id).HasName("PK_dbo.tb_Adv");
-                entity.ToTable("tb_Adv");
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-                entity.Property(e => e.Description).HasMaxLength(500);
-                entity.Property(e => e.Image).HasMaxLength(500);
-                entity.Property(e => e.Link).HasMaxLength(500);
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-                entity.Property(e => e.Title).HasMaxLength(150);
-            });
-
-            modelBuilder.Entity<TbCategory>(entity =>
-            {
-                entity.HasKey(e => e.Id).HasName("PK_dbo.tb_Category");
-                entity.ToTable("tb_Category");
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-                entity.Property(e => e.SeoDescription).HasMaxLength(250);
-                entity.Property(e => e.SeoKeywords).HasMaxLength(150);
-                entity.Property(e => e.SeoTitle).HasMaxLength(150);
-                entity.Property(e => e.Title).HasMaxLength(150);
-            });
-
             modelBuilder.Entity<TbContact>(entity =>
             {
                 entity.HasKey(e => e.Id).HasName("PK_dbo.tb_Contact");
@@ -84,19 +57,6 @@ namespace TT_ECommerce.Data
                 entity.Property(e => e.Message).HasMaxLength(4000);
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
                 entity.Property(e => e.Name).HasMaxLength(150);
-            });
-
-            modelBuilder.Entity<TbNews>(entity =>
-            {
-                entity.HasKey(e => e.Id).HasName("PK_dbo.tb_News");
-                entity.ToTable("tb_News");
-                entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-                entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-                entity.Property(e => e.Title).HasMaxLength(150);
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.TbNews)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_dbo.tb_News_dbo.tb_Category_CategoryId");
             });
 
             modelBuilder.Entity<TbOrder>(entity =>
@@ -127,7 +87,6 @@ namespace TT_ECommerce.Data
             {
                 entity.HasKey(e => e.Id).HasName("PK_dbo.tb_Posts");
                 entity.ToTable("tb_Posts");
-                entity.Property(e => e.Alias).HasMaxLength(150);
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
                 entity.Property(e => e.Image).HasMaxLength(250);
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
@@ -135,10 +94,6 @@ namespace TT_ECommerce.Data
                 entity.Property(e => e.SeoKeywords).HasMaxLength(250);
                 entity.Property(e => e.SeoTitle).HasMaxLength(250);
                 entity.Property(e => e.Title).HasMaxLength(150);
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.TbPosts)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_dbo.tb_Posts_dbo.tb_Category_CategoryId");
             });
 
             modelBuilder.Entity<TbProduct>(entity =>

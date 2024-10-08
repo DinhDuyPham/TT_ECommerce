@@ -30,7 +30,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult CreatePost()
         {
-            ViewBag.CategoryList = new SelectList(_context.TbCategories, "Id", "Title");
             return View();
            
         }
@@ -38,19 +37,52 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         [Route("CreatePost")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult CreatePost(TbPost post)
+        public IActionResult CreatePost(TbPost post, IFormFile Image)
         {
             if (ModelState.IsValid)
             {
+                // Đường dẫn vật lý đến thư mục lưu trữ hình ảnh
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgPosts");
+
+                // Kiểm tra nếu có tệp hình ảnh được tải lên
+                if (Image != null && Image.Length > 0)
+                {
+                    // Lấy tên file gốc
+                    string fileName = Path.GetFileName(Image.FileName);
+
+                    // Tạo đường dẫn đầy đủ nơi tệp sẽ được lưu
+                    string filePath = Path.Combine(uploadPath, fileName);
+
+                    // Lưu tệp vào đường dẫn chỉ định
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        Image.CopyTo(fileStream);
+                    }
+
+                    // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
+                    post.Image = "/imgPosts/" + fileName;
+                } 
                 post.CreatedDate = DateTime.Now;
                 post.ModifiedDate = DateTime.Now;
-               
+
                 _context.TbPosts.Add(post);
                 _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
+
+            // Debug ModelState
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (var error in modelState.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage); // In ra lỗi
+                }
+            }
+
+            // Trả lại danh sách Category nếu có lỗi
             return View(post);
         }
+
 
         [Route("EditPost")]
         [HttpGet]
@@ -92,7 +124,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             }
 
             var tbPost = await _context.TbPosts
-                .Include(t => t.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (tbPost == null)
             {
@@ -112,7 +143,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             }
 
             var tbPost = await _context.TbPosts
-                .Include(t => t.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (tbPost == null)
             {

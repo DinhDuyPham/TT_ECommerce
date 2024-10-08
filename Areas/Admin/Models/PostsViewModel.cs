@@ -39,6 +39,5 @@ namespace TT_ECommerce.Models.ViewModels
         public bool IsActive { get; set; }
 
         // Thêm danh sách danh mục nếu cần
-        public virtual ICollection<TbCategory> Categories { get; set; } = new List<TbCategory>();
     }
 }
