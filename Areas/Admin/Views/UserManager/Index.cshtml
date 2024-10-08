@@ -34,10 +34,11 @@
                     }
                 </td>
                 <td>
-                    <a href="@Url.Action("EditUser", "UserManager", new { area = "Admin", userId = user.Id })" class="btn btn-primary">Chỉnh sửa</a>
+                    <a href="@Url.Action("EditUser", "UserManager", new {  userId = user.Id })" class="btn btn-primary">Chỉnh sửa</a>
 
-                    <a href="@Url.Action("AssignRole", "UserManager", new { area = "Admin", userId = user.Id })" class="btn btn-info">Gán vai trò</a>
-
+                    <a href="@Url.Action("AssignRole", "UserManager", new { userId = user.Id })" class="btn btn-info">Gán vai trò</a>
+                    <a href="@Url.Action("ConfirmDeleteUser", "UserManager", new { userId = user.Id })" class="btn btn-danger"> Xóa người dùng</a>
+                    
                 </td>
             </tr>
         }

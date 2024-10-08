@@ -36,7 +36,7 @@ namespace TT_ECommerce.Data
 
 
 
-                optionsBuilder.UseSqlServer("Data Source=HORSEY;Initial Catalog=TT_ECommerce;Persist Security Info=True;User ID=sa;Password=***********;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-CLJC02\\TRUNGLE;Initial Catalog=TT_ECommerce1;Integrated Security=True;Trust Server Certificate=True"); // Use your actual connection string here
 
 
             }
