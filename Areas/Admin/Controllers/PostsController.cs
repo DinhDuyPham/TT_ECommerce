@@ -99,23 +99,61 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         [Route("EditPost")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditPost(TbPost post)
+        public IActionResult EditPost(TbPost post, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
+                // Lấy bài viết hiện tại từ database để kiểm tra ảnh cũ
+                var existingPost = _context.TbPosts.AsNoTracking().FirstOrDefault(p => p.Id == post.Id);
+                if (existingPost == null)
+                {
+                    return NotFound();
+                }
+
+                // Kiểm tra nếu có tệp hình ảnh mới được tải lên
+                if (Image != null && Image.Length > 0)
+                {
+                    // Đường dẫn lưu ảnh
+                    string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgPosts");
+
+                    // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    // Lấy tên file gốc và tạo đường dẫn đầy đủ để lưu
+                    string fileName = Path.GetFileName(Image.FileName);
+                    string filePath = Path.Combine(uploadPath, fileName);
+
+                    // Lưu tệp vào đường dẫn chỉ định
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        Image.CopyTo(fileStream);
+                    }
+
+                    // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
+                    post.Image = "/imgPosts/" + fileName;
+                }
+                else
+                {
+                    // Nếu không có ảnh mới, giữ lại ảnh cũ
+                    post.Image = existingPost.Image;
+                }
+
+                // Cập nhật trạng thái bài viết
                 _context.Entry(post).State = EntityState.Modified;
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(post);
         }
-    
 
 
 
 
-
-// GET: Admin/Posts/Details/5
+        // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
