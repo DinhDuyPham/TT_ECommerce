@@ -33,6 +33,10 @@ namespace TT_ECommerce.Controllers
         {
             return View();
         }
+        public IActionResult Checkout()
+        {
+            return View();
+        }
 
         // Xử lý form thêm sản phẩm vào giỏ hàng
 
