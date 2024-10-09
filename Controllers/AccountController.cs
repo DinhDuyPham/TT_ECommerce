@@ -281,8 +281,7 @@ namespace TT_ECommerce.Controllers
                 {
                     // Gửi email reset mật khẩu
                     await _emailService.SendEmailAsync(model.Email, "Reset Password", $"Click here to reset your password: <a href='{resetLink}'>link</a>");
-
-                    Console.WriteLine("Email sent successfully.");
+                    
                 }
                 catch (Exception ex)
                 {
@@ -291,8 +290,7 @@ namespace TT_ECommerce.Controllers
                     ModelState.AddModelError(string.Empty, "Có lỗi khi gửi email reset mật khẩu. Vui lòng thử lại sau.");
                     return View(model);
                 }
-
-                return RedirectToAction("ForgotPasswordConfirmation");
+                return Redirect("ForgotPasswordConfirmation");
             }
 
             return View(model);
