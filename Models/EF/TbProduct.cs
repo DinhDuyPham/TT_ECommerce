@@ -57,7 +57,7 @@ public partial class TbProduct
 
     public virtual TbProductCategory ProductCategory { get; set; } = null!;
 
-    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; } = new List<TbOrderDetail>();
+    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; } = new HashSet<TbOrderDetail>();
 
     public virtual ICollection<TbProductImage> TbProductImages { get; set; } = new List<TbProductImage>();
 }

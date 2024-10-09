@@ -5,6 +5,10 @@ namespace TT_ECommerce.Models.EF;
 
 public partial class TbOrder
 {
+    public TbOrder()
+    {
+        this.TbOrderDetails = new HashSet<TbOrderDetail>();
+    }
     public int Id { get; set; }
 
     public string Code { get; set; } = null!;
@@ -33,5 +37,5 @@ public partial class TbOrder
 
     public int? Status { get; set; }
 
-    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; } = new List<TbOrderDetail>();
+    public virtual ICollection<TbOrderDetail> TbOrderDetails { get; set; }
 }
