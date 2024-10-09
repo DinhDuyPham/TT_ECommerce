@@ -21,7 +21,7 @@ namespace TT_ECommerce.Controllers
         }
 
         // GET: TbProducts
-        public async Task<IActionResult> Index(string? categoryId, string? search, decimal? minPrice, decimal? maxPrice, string? sortOrder, int page = 1, int pageSize = 6)
+        public async Task<IActionResult> Index(string? categoryId, string? searchKeyword, string? search, decimal? minPrice, decimal? maxPrice, string? sortOrder, int page = 1, int pageSize = 6)
         {
             // Lấy tất cả danh mục sản phẩm để hiển thị trong dropdown
             ViewBag.Categories = await _context.TbProductCategories.ToListAsync();
@@ -44,7 +44,11 @@ namespace TT_ECommerce.Controllers
             {
                 productsQuery = productsQuery.Where(p => p.Title.Contains(search) || p.Description.Contains(search));
             }
-
+            // Lọc theo từ khóa tìm kiếm sản phẩm
+            if (!string.IsNullOrEmpty(searchKeyword))
+            {
+                productsQuery = productsQuery.Where(p => p.Title.Contains(searchKeyword) || p.Description.Contains(searchKeyword));
+            }
             // Lọc theo giá
             if (minPrice.HasValue || maxPrice.HasValue)
             {
@@ -78,6 +82,7 @@ namespace TT_ECommerce.Controllers
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = totalItems;
             ViewBag.SortOrder = sortOrder;
+            ViewBag.SearchKeyword = searchKeyword;
 
             return View(products);
         }

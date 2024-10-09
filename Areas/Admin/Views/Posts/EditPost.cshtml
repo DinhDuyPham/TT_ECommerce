@@ -1,27 +1,59 @@
 ﻿@model TT_ECommerce.Models.EF.TbPost
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
+<<<<<<< HEAD
     ViewData["Title"] = "Edit Post";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <h1>Edit Post</h1>
+=======
+<<<<<<<< HEAD:Areas/Admin/Views/Posts/View.cshtml
+    ViewData["Title"] = "View";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>View</h1>
+========
+    ViewData["Title"] = "Create Post";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+
+<h1>Edit Post</h1>
+>>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7:Areas/Admin/Views/Posts/EditPost.cshtml
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
 
 <h4>TbPost</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+<<<<<<< HEAD
         <form asp-controller="Posts" asp-action="EditPost" method="post" enctype="multipart/form-data">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <!-- Hidden field for the Post ID -->
+=======
+<<<<<<<< HEAD:Areas/Admin/Views/Posts/View.cshtml
+        <form asp-action="View">
+========
+        <!-- Form với enctype để upload hình ảnh -->
+        <form asp-action="EditPost" method="post" enctype="multipart/form-data">
+>>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7:Areas/Admin/Views/Posts/EditPost.cshtml
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Hidden field for Id -->
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             <input type="hidden" asp-for="Id" />
 
             <!-- Title -->
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
+<<<<<<< HEAD
                 <input asp-for="Title" class="form-control" required />
+=======
+                <input asp-for="Title" class="form-control" />
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
@@ -45,32 +77,82 @@
                 <input asp-for="Image" type="file" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
+<<<<<<< HEAD
 
             <!-- SEO Title -->
+=======
+<<<<<<<< HEAD:Areas/Admin/Views/Posts/View.cshtml
+========
+
+            <!-- SeoTitle -->
+>>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7:Areas/Admin/Views/Posts/EditPost.cshtml
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             <div class="form-group">
                 <label asp-for="SeoTitle" class="control-label"></label>
                 <input asp-for="SeoTitle" class="form-control" />
                 <span asp-validation-for="SeoTitle" class="text-danger"></span>
             </div>
 
+<<<<<<< HEAD
             <!-- SEO Description -->
+=======
+            <!-- SeoDescription -->
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             <div class="form-group">
                 <label asp-for="SeoDescription" class="control-label"></label>
                 <input asp-for="SeoDescription" class="form-control" />
                 <span asp-validation-for="SeoDescription" class="text-danger"></span>
             </div>
 
+<<<<<<< HEAD
             <!-- SEO Keywords -->
+=======
+            <!-- SeoKeywords -->
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             <div class="form-group">
                 <label asp-for="SeoKeywords" class="control-label"></label>
                 <input asp-for="SeoKeywords" class="form-control" />
                 <span asp-validation-for="SeoKeywords" class="text-danger"></span>
             </div>
+<<<<<<< HEAD
 
             <!-- CreatedBy (hidden input to store user info) -->
             <input type="hidden" asp-for="CreatedBy" value="@User.Identity.Name" />
 
             <!-- Submit button -->
+=======
+<<<<<<<< HEAD:Areas/Admin/Views/Posts/View.cshtml
+            <div class="form-group">
+                <label asp-for="CreatedBy" class="control-label"></label>
+                <input asp-for="CreatedBy" class="form-control" />
+                <span asp-validation-for="CreatedBy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModifiedDate" class="control-label"></label>
+                <input asp-for="ModifiedDate" class="form-control" />
+                <span asp-validation-for="ModifiedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Modifiedby" class="control-label"></label>
+                <input asp-for="Modifiedby" class="form-control" />
+                <span asp-validation-for="Modifiedby" class="text-danger"></span>
+            </div>
+========
+
+            <!-- Các trường không cần chỉnh sửa trực tiếp, hoặc không cần thiết trong form chỉnh sửa -->
+            <input type="hidden" asp-for="CreatedBy" />
+            <input type="hidden" asp-for="CreatedDate" />
+            <input type="hidden" asp-for="ModifiedDate" value="@DateTime.Now" />
+            <input type="hidden" asp-for="Modifiedby" value="@User.Identity.Name" />
+
+            <!-- Submit button -->
+>>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7:Areas/Admin/Views/Posts/EditPost.cshtml
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -81,8 +163,13 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<<<<<<< HEAD
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+=======
+
+
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7

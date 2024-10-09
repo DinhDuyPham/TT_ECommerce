@@ -97,6 +97,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         [Route("EditPost")]
         [HttpPost]
         [ValidateAntiForgeryToken]
+<<<<<<< HEAD
         public IActionResult EditPost(TbPost post, IFormFile Image)
         {
             if (ModelState.IsValid)
@@ -117,6 +118,33 @@ namespace TT_ECommerce.Areas.Admin.Controllers
                     string fileName = Path.GetFileName(Image.FileName);
 
                     // Tạo đường dẫn đầy đủ nơi tệp sẽ được lưu
+=======
+        public IActionResult EditPost(TbPost post, IFormFile? Image)
+        {
+            if (ModelState.IsValid)
+            {
+                // Lấy bài viết hiện tại từ database để kiểm tra ảnh cũ
+                var existingPost = _context.TbPosts.AsNoTracking().FirstOrDefault(p => p.Id == post.Id);
+                if (existingPost == null)
+                {
+                    return NotFound();
+                }
+
+                // Kiểm tra nếu có tệp hình ảnh mới được tải lên
+                if (Image != null && Image.Length > 0)
+                {
+                    // Đường dẫn lưu ảnh
+                    string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgPosts");
+
+                    // Kiểm tra và tạo thư mục nếu chưa tồn tại
+                    if (!Directory.Exists(uploadPath))
+                    {
+                        Directory.CreateDirectory(uploadPath);
+                    }
+
+                    // Lấy tên file gốc và tạo đường dẫn đầy đủ để lưu
+                    string fileName = Path.GetFileName(Image.FileName);
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
                     string filePath = Path.Combine(uploadPath, fileName);
 
                     // Lưu tệp vào đường dẫn chỉ định
@@ -126,6 +154,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
                     }
 
                     // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
+<<<<<<< HEAD
                     existingPost.Image = "/imgPosts/" + fileName;
                 }
 
@@ -146,16 +175,35 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             }
 
             // Nếu ModelState không hợp lệ, hiển thị lại form với lỗi
+=======
+                    post.Image = "/imgPosts/" + fileName;
+                }
+                else
+                {
+                    // Nếu không có ảnh mới, giữ lại ảnh cũ
+                    post.Image = existingPost.Image;
+                }
+
+                // Cập nhật trạng thái bài viết
+                _context.Entry(post).State = EntityState.Modified;
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             return View(post);
         }
 
 
 
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
