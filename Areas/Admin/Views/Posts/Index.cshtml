@@ -51,7 +51,7 @@
                                     <td>@post.ModifiedDate.ToString("g")</td>
                                     <td>@post.Modifiedby</td>
                                     <td>
-                                        <a asp-action="Edit" asp-route-id="@post.Id" class="btn btn-warning" style="padding:5px; margin-right: 5px;">
+                                        <a asp-action="EditPost" asp-route-id="@post.Id" class="btn btn-warning" style="padding:5px; margin-right: 5px;">
                                             <i class="fa fa-edit"></i> Sửa
                                         </a>
                                         <form asp-action="Delete" asp-route-id="@post.Id" method="post" style="display:inline-block;">

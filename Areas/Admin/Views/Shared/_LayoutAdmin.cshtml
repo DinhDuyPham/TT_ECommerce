@@ -48,6 +48,11 @@
     </style>
 </head>
 <body>
+    @if (IsSectionDefined("naviheader"))
+    {
+        @RenderSection("naviheader", required: false)
+    }
+
     <div class="wrapper">
         @await Html.PartialAsync("Sidebar")
         <div class="main-panel">

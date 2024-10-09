@@ -15,7 +15,7 @@ public partial class TbOrderDetail
 
     public int Quantity { get; set; }
 
-    public virtual TbOrder Order { get; set; } = null!;
+    public virtual TbOrder? Order { get; set; }
 
-    public virtual TbProduct Product { get; set; } = null!;
+    public virtual TbProduct? Product { get; set; }
 }
