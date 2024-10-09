@@ -44,6 +44,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         {
             var order = await _context.TbOrders
                 .Include(o => o.TbOrderDetails) // Bao gồm chi tiết đơn hàng
+                .ThenInclude(od => od.Product) // Nạp kèm thông tin sản phẩm cho từng chi tiết đơn hàng
                 .FirstOrDefaultAsync(o => o.Id == id);
 
             return View(order); // Truyền model TbOrder vào view chính
@@ -51,6 +52,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         public async Task<IActionResult> Partial_Product(int id)
         {
             var items = await _context.TbOrderDetails
+                .Include(od => od.Product) // Nạp kèm thông tin sản phẩm
                 .Where(x => x.OrderId == id)
                 .ToListAsync();
 

@@ -31,7 +31,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         public IActionResult CreatePost()
         {
             return View();
-           
+
         }
 
         [Route("CreatePost")]
@@ -61,7 +61,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
 
                     // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
                     post.Image = "/imgPosts/" + fileName;
-                } 
+                }
                 post.CreatedDate = DateTime.Now;
                 post.ModifiedDate = DateTime.Now;
 
@@ -78,6 +78,8 @@ namespace TT_ECommerce.Areas.Admin.Controllers
                     Console.WriteLine(error.ErrorMessage); // In ra lỗi
                 }
             }
+
+            // Trả lại danh sách Category nếu có lỗi
             return View(post);
         }
 
@@ -97,28 +99,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         [Route("EditPost")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-<<<<<<< HEAD
-        public IActionResult EditPost(TbPost post, IFormFile Image)
-        {
-            if (ModelState.IsValid)
-            {
-                var existingPost = _context.TbPosts.Find(post.Id); // Tìm bài viết theo Id
-                if (existingPost == null)
-                {
-                    return NotFound(); // Nếu không tìm thấy bài viết
-                }
-
-                // Đường dẫn vật lý đến thư mục lưu trữ hình ảnh
-                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgPosts");
-
-                // Kiểm tra nếu có tệp hình ảnh được tải lên
-                if (Image != null && Image.Length > 0)
-                {
-                    // Lấy tên file gốc
-                    string fileName = Path.GetFileName(Image.FileName);
-
-                    // Tạo đường dẫn đầy đủ nơi tệp sẽ được lưu
-=======
         public IActionResult EditPost(TbPost post, IFormFile? Image)
         {
             if (ModelState.IsValid)
@@ -144,7 +124,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
 
                     // Lấy tên file gốc và tạo đường dẫn đầy đủ để lưu
                     string fileName = Path.GetFileName(Image.FileName);
->>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
                     string filePath = Path.Combine(uploadPath, fileName);
 
                     // Lưu tệp vào đường dẫn chỉ định
@@ -154,28 +133,6 @@ namespace TT_ECommerce.Areas.Admin.Controllers
                     }
 
                     // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
-<<<<<<< HEAD
-                    existingPost.Image = "/imgPosts/" + fileName;
-                }
-
-                // Cập nhật các thuộc tính khác của bài viết
-                existingPost.Title = post.Title;
-                existingPost.Description = post.Description;
-                existingPost.Detail = post.Detail;
-                existingPost.SeoTitle = post.SeoTitle;
-                existingPost.SeoDescription = post.SeoDescription;
-                existingPost.SeoKeywords = post.SeoKeywords;
-                existingPost.ModifiedDate = DateTime.Now; // Cập nhật thời gian chỉnh sửa
-
-                // Lưu thay đổi vào cơ sở dữ liệu
-                _context.TbPosts.Update(existingPost);
-                _context.SaveChanges(); // Thực hiện lưu vào DB
-
-                return RedirectToAction("Index");
-            }
-
-            // Nếu ModelState không hợp lệ, hiển thị lại form với lỗi
-=======
                     post.Image = "/imgPosts/" + fileName;
                 }
                 else
@@ -190,20 +147,12 @@ namespace TT_ECommerce.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
->>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
             return View(post);
         }
 
 
 
 
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> e8f11cd6bdc7db34dde32e15faa9c65590c94aa7
         // GET: Admin/Posts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
