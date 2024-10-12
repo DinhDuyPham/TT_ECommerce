@@ -31,7 +31,11 @@ namespace TT_ECommerce.Data
             if (!optionsBuilder.IsConfigured)
             {
 
+<<<<<<< HEAD
                 optionsBuilder.UseSqlServer("Data Source=LAPTOP-RAAET1NE\\MINHNHAT;Initial Catalog=TT_ECommerce_V2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
+=======
+                optionsBuilder.UseSqlServer("Data Source=DHP003\\SQLEXPRESS;Initial Catalog=TT_ECommerce_V2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"); // Use your actual connection string here
+>>>>>>> da97be2538eb1db6c85793f9d5e257c2ff8ec47f
 
 
             }

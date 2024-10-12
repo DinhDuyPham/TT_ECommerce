@@ -31,7 +31,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         public IActionResult CreatePost()
         {
             return View();
-           
+
         }
 
         [Route("CreatePost")]
@@ -61,7 +61,7 @@ namespace TT_ECommerce.Areas.Admin.Controllers
 
                     // Lưu đường dẫn tương đối vào cơ sở dữ liệu (để hiển thị trên web)
                     post.Image = "/imgPosts/" + fileName;
-                } 
+                }
                 post.CreatedDate = DateTime.Now;
                 post.ModifiedDate = DateTime.Now;
 
