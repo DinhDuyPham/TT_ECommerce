@@ -78,32 +78,25 @@
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
 
-            <!-- IsHome -->
-            <div class="form-group">
-                <label asp-for="IsHome" class="control-label"></label>
-                <input asp-for="IsHome" class="form-control" type="checkbox" />
-                <span asp-validation-for="IsHome" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHome" /> @Html.DisplayNameFor(model => model.IsHome)
+                </label>
             </div>
-
-            <!-- IsSale -->
-            <div class="form-group">
-                <label asp-for="IsSale" class="control-label"></label>
-                <input asp-for="IsSale" class="form-control" type="checkbox" />
-                <span asp-validation-for="IsSale" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsSale" /> @Html.DisplayNameFor(model => model.IsSale)
+                </label>
             </div>
-
-            <!-- IsFeature -->
-            <div class="form-group">
-                <label asp-for="IsFeature" class="control-label"></label>
-                <input asp-for="IsFeature" class="form-control" type="checkbox" />
-                <span asp-validation-for="IsFeature" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsFeature" /> @Html.DisplayNameFor(model => model.IsFeature)
+                </label>
             </div>
-
-            <!-- IsHot -->
-            <div class="form-group">
-                <label asp-for="IsHot" class="control-label"></label>
-                <input asp-for="IsHot" class="form-control" type="checkbox" />
-                <span asp-validation-for="IsHot" class="text-danger"></span>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHot" /> @Html.DisplayNameFor(model => model.IsHot)
+                </label>
             </div>
 
             <!-- SeoTitle -->
