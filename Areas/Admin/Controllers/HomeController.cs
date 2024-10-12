@@ -11,5 +11,13 @@ namespace TT_ECommerce.Areas.Admin.Controllers
         {
             return View();
         }
-    }
+		public IActionResult Error(int statusCode)
+		{
+			if (statusCode == 404)
+			{
+				return View("NotFound"); // Chuyển đến view NotFound.cshtml
+			}
+			return View("Error"); // Trang lỗi chung
+		}
+	}
 }

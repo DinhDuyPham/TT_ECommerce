@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,47 +22,76 @@ namespace TT_ECommerce.Areas.Admin.Controllers
             _context = context;
         }
 
+        // GET: Admin/ProductManager
         public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
         {
-            // Truy vấn ban đầu cho sản phẩm
             var productsQuery = _context.TbProducts.Include(t => t.ProductCategory);
-
-            // Đếm tổng số sản phẩm
             var totalItems = await productsQuery.CountAsync();
-
-            // Phân trang với Skip và Take
             var products = await productsQuery
-                .Skip((page - 1) * pageSize)  // Bỏ qua số sản phẩm của các trang trước
-                .Take(pageSize)  // Lấy số sản phẩm trên trang hiện tại
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            // Truyền các thông tin cần thiết cho ViewBag
             ViewBag.Page = page;
             ViewBag.PageSize = pageSize;
             ViewBag.TotalItems = totalItems;
 
-            // Trả về view với danh sách sản phẩm đã phân trang
             return View(products);
         }
 
-        // GET: Admin/ProductManager/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Admin/ProductManager/CreateProduct
+        [HttpGet]
+        public IActionResult CreateProduct()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tbProduct = await _context.TbProducts
-                .Include(t => t.ProductCategory)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tbProduct == null)
-            {
-                return NotFound();
-            }
-
-            return View(tbProduct);
+            ViewBag.ProductCategories = _context.TbProductCategories.ToList();
+            return View();
         }
 
+        // POST: Admin/ProductManager/CreateProduct
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateProduct(TbProduct pro, IFormFile? Image)
+        {
+            if (ModelState.IsValid)
+            {
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "imgProducts");
+
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+
+                // Kiểm tra nếu có tệp hình ảnh được tải lên
+                if (Image != null && Image.Length > 0)
+                {
+                    // Tạo tên tệp ngẫu nhiên để tránh trùng lặp
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(Image.FileName);
+                    string filePath = Path.Combine(uploadPath, fileName);
+
+                    // Lưu tệp vào đường dẫn chỉ định
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Image.CopyToAsync(fileStream);
+                    }
+
+                    // Lưu đường dẫn tương đối vào cơ sở dữ liệu
+                    pro.Image = "/imgProducts/" + fileName;
+                }
+
+                // Thiết lập thời gian tạo và sửa đổi
+                pro.CreatedDate = DateTime.Now;
+                pro.ModifiedDate = DateTime.Now;
+
+                // Thêm sản phẩm vào cơ sở dữ liệu
+                _context.TbProducts.Add(pro);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Index");
+            }
+
+            // Nếu có lỗi trong ModelState, truyền lại danh sách danh mục
+            ViewBag.ProductCategories = _context.TbProductCategories.ToList();
+            return View(pro);
+        }
     }
 }

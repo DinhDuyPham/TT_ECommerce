@@ -61,18 +61,11 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
-// Cấu hình pipeline yêu cầu HTTP
-if (app.Environment.IsDevelopment())
-{
-    app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
 
+// Cấu hình pipeline yêu cầu HTTP
 app.UseHttpsRedirection();
+
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
@@ -81,6 +74,19 @@ app.UseAuthorization();
 // Kích hoạt middleware Session
 app.UseSession();
 
+app.Use(async (context, next) =>
+{
+	await next.Invoke();
+
+	if (context.Response.StatusCode == 404) // Nếu trả về mã lỗi 404
+	{
+		context.Request.Path = "/Home/Error"; // Chuyển hướng đến trang lỗi
+		await next.Invoke();
+	}
+});
+
+// Middleware này sẽ chuyển hướng đến trang lỗi 404 khi xảy ra lỗi không tìm thấy trang.
+app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode=404");
 
 app.UseEndpoints(endpoints =>
 {

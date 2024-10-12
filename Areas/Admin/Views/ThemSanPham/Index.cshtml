@@ -1,72 +1,52 @@
 ﻿@model IEnumerable<TT_ECommerce.Models.EF.TbProduct>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Product List";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h4>THÊM SẢN PHẨM</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label">Tên sản phẩm</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProductCode" class="control-label">Giá sản phẩm</label>
-                <input asp-for="ProductCode" class="form-control" />
-                <span asp-validation-for="ProductCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label for="comment">Mô tả sản phẩm</label>
-                <textarea class="form-control" id="comment" rows="5">
-                          </textarea>
-            </div>
-            <div class="form-group">
-                <label for="comment">Thông tin sản phẩm</label>
-                <textarea class="form-control" id="comment" rows="5">
-                          </textarea>
-            </div>
-            <div class="form-group">
-                <label asp-for="Detail" class="control-label">Số lượng sản phẩm</label>
-                <input asp-for="Detail" class="form-control" />
-                <span asp-validation-for="Detail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Image" class="control-label">Nhà cung cấp</label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
-            </div>
-          
-            <div class="form-group">
-                <label asp-for="PriceSale" class="control-label">Loại sản phẩm</label>
-                <input asp-for="PriceSale" class="form-control" />
-                <span asp-validation-for="PriceSale" class="text-danger"></span>
-            </div>
+<h1>Product List</h1>
 
-            <div class="form-group">
-                <div class="card-action">
-                    <a asp-action="Create" class="btn btn-success">Submit</a>
-                    <a asp-action="Cancel" class="btn btn-danger">Cancel</a>
-                </div>
-            </div>
-        </form>
-
-    </div>
-    <div class="col-md-6 offset-md-2">
-        <div class="form-group">
-            <label asp-for="Price" class="control-label">Ảnh sản phẩm</label>
-            <div class="form-group">
-                <label for="exampleFormControlFile1">Chọn ảnh</label>
-<input type="file" class="form-control-file" id="exampleFormControlFile1" accept="image/*" onchange="previewImage(event)" />
-
-                <!-- Thẻ img để hiển thị hình ảnh đã chọn -->
-                <img id="preview" src="#" alt="Preview Image" style="display:none; max-width: 100%; height: auto; margin-top: 10px;" />
-            </div>
-        </div>
-    </div>
+<div>
+    <a asp-action="CreateProduct" class="btn btn-primary">Create New Product</a>
 </div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Product Code</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Title</td>
+                <td>@item.ProductCode</td>
+                <td>@item.Description</td>
+                <td>@item.Price</td>
+                <td>@item.Quantity</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.CreatedDate.ToString("MM/dd/yyyy")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

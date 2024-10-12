@@ -24,7 +24,6 @@ namespace TT_ECommerce
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/LoginAdmin"; // Trang đăng nhập
-                   
                 });
 
             services.AddControllersWithViews();
@@ -41,8 +40,7 @@ namespace TT_ECommerce
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                app.UseHsts(); // Chỉ giữ lại HSTS trong môi trường production
             }
 
             app.UseHttpsRedirection();
@@ -65,6 +63,5 @@ namespace TT_ECommerce
                     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
             });
         }
-
     }
 }

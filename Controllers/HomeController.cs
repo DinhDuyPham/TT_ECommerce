@@ -5,6 +5,7 @@ using TT_ECommerce.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TT_ECommerce.Models.EF;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace TT_ECommerce.Controllers
 {
@@ -60,9 +61,21 @@ namespace TT_ECommerce.Controllers
             return RedirectToAction("Index");
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        // Action để hiển thị trang lỗi
+        [Route("Home/Error")]
+        public IActionResult Error(int statusCode)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (statusCode == 404)
+            {
+                return View("NotFound"); // Trả về view 404 nếu là lỗi 404
+            }
+            else
+            {
+                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            }
+
+            
         }
+
     }
 }
