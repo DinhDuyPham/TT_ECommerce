@@ -4,6 +4,7 @@
     using TT_ECommerce.Data;
     using TT_ECommerce.Models.EF;
     using System.Net;
+using System.Security.Claims;
 
     namespace TT_ECommerce.Controllers
     {
@@ -23,12 +24,13 @@
             {
                 return BadRequest("Quantity must be greater than 0");
             }
+         
 
             // Giả lập thông tin khách hàng (đã đăng nhập)
-            var customerName = "John Doe"; // Thay thế bằng tên khách hàng
-            var phone = "123-456-7890"; // Thay thế bằng số điện thoại
-            var address = "123 Main St"; // Thay thế bằng địa chỉ
-            var email = "johndoe@example.com"; // Thay thế bằng email
+            //var customerName = "John Doe"; // Thay thế bằng tên khách hàng
+            //var phone = "123-456-7890"; // Thay thế bằng số điện thoại
+            //var address = "123 Main St"; // Thay thế bằng địa chỉ
+            //var email = "johndoe@example.com"; // Thay thế bằng email
 
             // Tìm sản phẩm trong cơ sở dữ liệu
             var product = _context.TbProducts.Find(productId);
@@ -36,14 +38,25 @@
             {
                 return NotFound("Product not found");
             }
-
-            // Kiểm tra thông tin khách hàng
-            if (string.IsNullOrEmpty(customerName) || string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(address))
+            if (!User.Identity.IsAuthenticated)
             {
-                return BadRequest("Customer Name, Phone, and Address are required");
+                return BadRequest("User is not logged in"); // Hoặc có thể chuyển hướng đến trang đăng nhập
+            }
+          
+                // Lấy thông tin người dùng từ Claims
+                var customerName = User.FindFirst(ClaimTypes.Name)?.Value; // Tên khách hàng
+                //var phone = User.FindFirst("PhoneNumber")?.Value; // Số điện thoại, nếu có lưu trong Claims
+                //var address = User.FindFirst("Address")?.Value; // Địa chỉ, nếu có lưu trong Claims
+                var email = User.FindFirst(ClaimTypes.Email)?.Value; 
+          
+           
+            // Kiểm tra thông tin khách hàng
+            if (string.IsNullOrEmpty(customerName) || string.IsNullOrEmpty(email) /*|| string.IsNullOrEmpty(phone)*/ /*|| string.IsNullOrEmpty(address)*/)
+            {
+                return BadRequest("Customer Name or Email are required");
             }
 
-            // Tạo mã đơn hàng (có thể tuỳ chỉnh mã theo ý muốn)
+            //// Tạo mã đơn hàng (có thể tuỳ chỉnh mã theo ý muốn)
             var orderCode = "ORD-" + DateTime.Now.Ticks;
 
             // Tạo đơn hàng mới
@@ -51,8 +64,8 @@
             {
                 Code = orderCode, // Mã đơn hàng
                 CustomerName = customerName,
-                Phone = phone,
-                Address = address,
+                //Phone = phone,
+                //Address = address,
                 TotalAmount = product.Price * quantity, // Tính tổng tiền dựa trên giá sản phẩm
                 Quantity = quantity,
                 Email = email,

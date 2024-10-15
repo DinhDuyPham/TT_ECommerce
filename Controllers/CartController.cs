@@ -35,7 +35,11 @@ namespace TT_ECommerce.Controllers
         }
         public IActionResult Checkout()
         {
-            return View();
+            var cartItems = _context.TbOrders
+               .Include(o => o.TbOrderDetails) // Giả sử rằng TbOrder có một mối quan hệ với TbOrderDetail
+                   .ThenInclude(d => d.Product) // Giả sử TbOrderDetail có một mối quan hệ với TbProduct
+               .ToList();
+            return View(cartItems);
         }
 
         // Xử lý form thêm sản phẩm vào giỏ hàng
