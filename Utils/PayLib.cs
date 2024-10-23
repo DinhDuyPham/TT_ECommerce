@@ -16,7 +16,6 @@ namespace TT_ECommerce.Utils
                 _requestData.Add(key, value);
             }
         }
-
         public string CreateRequestUrl(string baseUrl, string vnp_HashSecret)
         {
             StringBuilder data = new StringBuilder();
