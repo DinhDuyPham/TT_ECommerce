@@ -26,12 +26,6 @@ using System.Security.Claims;
             }
          
 
-            // Giả lập thông tin khách hàng (đã đăng nhập)
-            //var customerName = "John Doe"; // Thay thế bằng tên khách hàng
-            //var phone = "123-456-7890"; // Thay thế bằng số điện thoại
-            //var address = "123 Main St"; // Thay thế bằng địa chỉ
-            //var email = "johndoe@example.com"; // Thay thế bằng email
-
             // Tìm sản phẩm trong cơ sở dữ liệu
             var product = _context.TbProducts.Find(productId);
             if (product == null)
@@ -45,8 +39,8 @@ using System.Security.Claims;
           
                 // Lấy thông tin người dùng từ Claims
                 var customerName = User.FindFirst(ClaimTypes.Name)?.Value; // Tên khách hàng
-                //var phone = User.FindFirst("PhoneNumber")?.Value; // Số điện thoại, nếu có lưu trong Claims
-                //var address = User.FindFirst("Address")?.Value; // Địa chỉ, nếu có lưu trong Claims
+                var phone = "Null"; // Số điện thoại, nếu có lưu trong Claims
+                var address = "Null"; // Địa chỉ, nếu có lưu trong Claims
                 var email = User.FindFirst(ClaimTypes.Email)?.Value; 
           
            
@@ -64,8 +58,8 @@ using System.Security.Claims;
             {
                 Code = orderCode, // Mã đơn hàng
                 CustomerName = customerName,
-                //Phone = phone,
-                //Address = address,
+                Phone = phone,
+                Address = address,
                 TotalAmount = product.Price * quantity, // Tính tổng tiền dựa trên giá sản phẩm
                 Quantity = quantity,
                 Email = email,

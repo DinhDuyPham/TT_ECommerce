@@ -3,7 +3,7 @@
     ViewData["Title"] = "Checkout";
     Layout = "~/Views/Shared/_Layout.cshtml";
     decimal totalAmount = 0;
-    decimal ship = 15;
+    decimal ship = 35000;
 }
 <!-- Start Hero Section -->
 <div class="hero">
@@ -206,11 +206,52 @@
                         </div>
                     </div>
                     <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary"><a style="color:azure">Place Order</a></button>
+                        <button type="button" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary" id="placeOrderBtn"> <a style="color:azure">Place Order</a></button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+
+<script>
+    document.getElementById('placeOrderBtn').addEventListener('click', function () {
+        // Gọi tới API để lấy URL thanh toán
+       
+        var amount = "@((long)((totalAmount + ship))*100)";  //Giá trị amount mẫu, lấy từ context thực tế
+        var infor = '@Model.FirstOrDefault()?.Email';  // Thông tin thanh toán mẫu
+        // Lấy ngày giờ hiện tại
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, '0'); // Tháng 0-indexed nên cần +1
+        var day = now.getDate().toString().padStart(2, '0');
+        var hours = now.getHours().toString().padStart(2, '0');
+        var minutes = now.getMinutes().toString().padStart(2, '0');
+        var seconds = now.getSeconds().toString().padStart(2, '0');
+
+        // Tạo mã hóa đơn dựa trên ngày giờ (yyyymmddHHMMSS)
+        var orderinfor = year + month + day + hours + minutes + seconds;
+
+        var url = `/VNPayAPI/${amount}&${infor}&${orderinfor}`;
+
+        fetch(url, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.error('@@data:', data);
+                if (data.url) {
+                    // Đóng tab hiện tại
+                    //window.close();
+                    // Mở tab mới với URL trả về từ máy chủ
+                    //window.open(data.url, '_blank');
+                    window.location.href = data.url;
+                }
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra:', error);
+            });
+    });
+</script>
 <!-- Checkout Page End -->

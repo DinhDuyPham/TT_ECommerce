@@ -30,6 +30,13 @@ namespace TT_ECommerce
 
             services.AddDbContext<TT_ECommerceDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -42,6 +49,9 @@ namespace TT_ECommerce
             {
                 app.UseHsts(); // Chỉ giữ lại HSTS trong môi trường production
             }
+
+
+            app.UseCors("AllowAllOrigins");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
