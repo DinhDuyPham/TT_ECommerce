@@ -17,7 +17,7 @@ namespace TT_ECommerce.Controllers
         {
             return View();
         }
-
+        
         [Route("/VNPayAPI/{amount}&{infor}&{orderinfor}")]
         public async Task<IActionResult> Payment(string amount, string infor, string orderinfor)
         {
